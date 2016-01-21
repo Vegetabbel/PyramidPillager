@@ -4,9 +4,13 @@ using System.Collections;
 public class PlayerMovement : MonoBehaviour {
 
     private Rigidbody rb;
-    private float moveSpeedPhysics = 50f;
+    private float moveSpeedPhysics = 100f;
     private float moveSpeedArcade = 10f;
-    private float jumpForce = 50f;
+    private float jumpForce = 400f;
+    private float wallJumpForce = 300f;
+    private bool isGrounded = false;
+    private bool isTouchingLeftWall = false;
+    private bool isTouchingRightWall = false;
 
     public enum Controls {Physics, Arcade};
     public Controls controlState;
@@ -16,7 +20,30 @@ public class PlayerMovement : MonoBehaviour {
     {
         rb = GetComponent<Rigidbody>();
 	}
-	
+
+    void Update()
+    {
+        if (!isGrounded)
+        {
+            moveSpeedPhysics = 30;
+            moveSpeedArcade = 3;
+        }
+        else
+        {
+            moveSpeedPhysics = 100f;
+            moveSpeedArcade = 10f;
+        }
+
+        if (Physics.Raycast(gameObject.transform.position, -Vector3.up, 1f))
+        {
+            isGrounded = true;
+        }
+        else
+        {
+            isGrounded = false;
+        }
+    }
+
     void FixedUpdate ()
     {
         switch (controlState)
@@ -33,10 +60,31 @@ public class PlayerMovement : MonoBehaviour {
                     rb.AddForce(moveSpeedPhysics, 0, 0);
                 }
                 //Jump
-                if (Input.GetKey(KeyCode.Space))
+                if (isGrounded)
                 {
-                    rb.AddForce(0, jumpForce, 0);
+                    if (Input.GetKey(KeyCode.Space))
+                    {
+                        rb.AddForce(0, jumpForce, 0);
+                    }
                 }
+                else
+                {
+                    if (isTouchingLeftWall)
+                    {
+                        if (Input.GetKey(KeyCode.Space))
+                        {
+                            rb.AddForce(wallJumpForce, jumpForce * 0.5f, 0);
+                        }
+                    }
+                    if (isTouchingRightWall)
+                    {
+                        if (Input.GetKey(KeyCode.Space))
+                        {
+                            rb.AddForce(-1 * wallJumpForce, jumpForce * 0.5f, 0);
+                        }
+                    }
+                } 
+                rb.velocity = new Vector3(Mathf.Clamp(rb.velocity.x, -15f, 15f), rb.velocity.y, rb.velocity.z);
                 break;
 
             case Controls.Arcade:
@@ -55,9 +103,29 @@ public class PlayerMovement : MonoBehaviour {
                                                 rb.position.z);
                 }
                 //Jump
-                if (Input.GetKey(KeyCode.Space))
+                if (isGrounded)
                 {
-                    rb.AddForce(0, jumpForce, 0);
+                    if (Input.GetKey(KeyCode.Space))
+                    {
+                        rb.AddForce(0, jumpForce, 0);
+                    }
+                }
+                else
+                {
+                    if (isTouchingLeftWall)
+                    {
+                        if (Input.GetKey(KeyCode.Space))
+                        {
+                            rb.AddForce(wallJumpForce, jumpForce * 0.5f, 0);
+                        }
+                    }
+                    if (isTouchingRightWall)
+                    {
+                        if (Input.GetKey(KeyCode.Space))
+                        {
+                            rb.AddForce(-1 * wallJumpForce, jumpForce * 0.5f, 0);
+                        }
+                    }
                 }
                 break;
 
@@ -66,9 +134,14 @@ public class PlayerMovement : MonoBehaviour {
                 break;
         }
     }
-
-	void Update ()
+    public bool IsTouchingLeftWall
     {
-             
+        get { return isTouchingLeftWall;  }
+        set { isTouchingLeftWall = value; }
+    }
+    public bool IsTouchingRightWall
+    {
+        get { return isTouchingRightWall; }
+        set { isTouchingRightWall = value; }
     }
 }
