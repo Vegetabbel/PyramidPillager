@@ -4,7 +4,9 @@ using System.Collections;
 public class PlayerMovement : MonoBehaviour {
 
     private Rigidbody rb;
-    private float moveSpeed = 10;
+    private float moveSpeedPhysics = 50f;
+    private float moveSpeedArcade = 10f;
+    private float jumpForce = 50f;
 
     public enum Controls {Physics, Arcade};
     public Controls controlState;
@@ -15,29 +17,58 @@ public class PlayerMovement : MonoBehaviour {
         rb = GetComponent<Rigidbody>();
 	}
 	
-	void Update ()
+    void FixedUpdate ()
     {
         switch (controlState)
         {
             case Controls.Physics:
-                //move left
+                //Move left
                 if (Input.GetKey(KeyCode.A))
                 {
-                    rb.AddForce(-10 * moveSpeed, 0, 0);
+                    rb.AddForce(-1 * moveSpeedPhysics, 0, 0);
                 }
-                //move right
+                //Move right
                 if (Input.GetKey(KeyCode.D))
                 {
-                    rb.AddForce(10 * moveSpeed, 0, 0);
+                    rb.AddForce(moveSpeedPhysics, 0, 0);
+                }
+                //Jump
+                if (Input.GetKey(KeyCode.Space))
+                {
+                    rb.AddForce(0, jumpForce, 0);
                 }
                 break;
-            case Controls.Arcade:
 
+            case Controls.Arcade:
+                //Move left
+                if (Input.GetKey(KeyCode.A))
+                {
+                    rb.position = new Vector3   (rb.position.x - moveSpeedArcade * Time.deltaTime,
+                                                rb.position.y,
+                                                rb.position.z);
+                }
+                //Move right
+                if (Input.GetKey(KeyCode.D))
+                {
+                    rb.position = new Vector3   (rb.position.x + moveSpeedArcade * Time.deltaTime,
+                                                rb.position.y,
+                                                rb.position.z);
+                }
+                //Jump
+                if (Input.GetKey(KeyCode.Space))
+                {
+                    rb.AddForce(0, jumpForce, 0);
+                }
                 break;
+
             default:
-                Debug.Log("No controls type selected");
+                Debug.Log("No control type selected");
                 break;
         }
-        
+    }
+
+	void Update ()
+    {
+             
     }
 }
