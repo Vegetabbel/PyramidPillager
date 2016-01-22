@@ -16,8 +16,12 @@ public class LevelController : MonoBehaviour
     private Vector3 lastEndpoint;
     private Vector3 newStartpoint;
     private Vector3 nextEndpointWorldSpace;
+    private Vector3 newStartpointWorldSpace;
     private int currentLevel = 0;
     private GameObject player;
+    private bool blockerReady = false;
+    private float distance = 10000;
+    private GameObject blocker;
 
     public enum NextLevelStyle { Horizontal, Vertical, TreasureRoom }
     private NextLevelStyle levelStyle = NextLevelStyle.Horizontal;
@@ -65,6 +69,9 @@ public class LevelController : MonoBehaviour
             lastInitializedLevel = newLevel;
         }
         nextEndpointWorldSpace = lastInitializedLevel.transform.Find("Endpoint").position;
+        newStartpointWorldSpace = lastInitializedLevel.transform.Find("Startpoint").position;
+        blocker = lastInitializedLevel.transform.Find("Model/Door").gameObject;
+        blocker.SetActive(false);
 
         if (currentLevel == treasureRoomPlace)
         {
@@ -94,7 +101,16 @@ public class LevelController : MonoBehaviour
             if (Vector3.Distance(player.transform.position, nextEndpointWorldSpace) < 1f)
             {
                 RandomizeLevel();
+                blockerReady = true;
             }
         } 
+        if (blockerReady)
+        {
+            if (Vector3.Distance(player.transform.position, newStartpointWorldSpace) > 1f)
+            {
+                blocker.SetActive(true);
+                blockerReady = false;
+            }
+        }
     }
 }
