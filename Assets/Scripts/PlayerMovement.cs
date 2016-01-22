@@ -4,7 +4,12 @@ using System.Collections;
 public class PlayerMovement : MonoBehaviour {
 
     private Rigidbody rb;
-    private float moveSpeedPhysics = 100f;
+    private float moveSpeedPhysics; //'Active' move speed, set in Update()
+    private float groundMoveSpeedPhysics = 100f;
+    private float airMoveSpeedPhysics; //Is set in Start()
+    private float sprintMoveSpeedPhysics = 123; //Is added on top of normal move speed
+    private float sprintMaxMoveSpeedPhysics = 12f;
+    private float maxMoveSpeedPhysics = 8f;
     private float moveSpeedArcade = 10f;
     private float jumpForce = 400f;
     private float wallJumpForce = 300f;
@@ -19,18 +24,19 @@ public class PlayerMovement : MonoBehaviour {
 	void Start ()
     {
         rb = GetComponent<Rigidbody>();
+        airMoveSpeedPhysics = groundMoveSpeedPhysics * 0.5f;
 	}
 
     void Update()
     {
         if (!isGrounded)
         {
-            moveSpeedPhysics = 30;
+            moveSpeedPhysics = airMoveSpeedPhysics;
             moveSpeedArcade = 3;
         }
         else
         {
-            moveSpeedPhysics = 100f;
+            moveSpeedPhysics = groundMoveSpeedPhysics;            
             moveSpeedArcade = 10f;
         }
 
@@ -49,15 +55,19 @@ public class PlayerMovement : MonoBehaviour {
         switch (controlState)
         {
             case Controls.Physics:
+                if (Input.GetKey(KeyCode.LeftShift))
+                {
+                    
+                }
                 //Move left
                 if (Input.GetKey(KeyCode.A))
                 {
-                    rb.AddForce(-1 * moveSpeedPhysics, 0, 0);
+                    rb.AddForce(-1 * groundMoveSpeedPhysics, 0, 0);
                 }
                 //Move right
                 if (Input.GetKey(KeyCode.D))
                 {
-                    rb.AddForce(moveSpeedPhysics, 0, 0);
+                    rb.AddForce(groundMoveSpeedPhysics, 0, 0);
                 }
                 //Jump
                 if (isGrounded)
@@ -84,7 +94,7 @@ public class PlayerMovement : MonoBehaviour {
                         }
                     }
                 } 
-                rb.velocity = new Vector3(Mathf.Clamp(rb.velocity.x, -15f, 15f), rb.velocity.y, rb.velocity.z);
+                rb.velocity = new Vector3(Mathf.Clamp(rb.velocity.x, -maxMoveSpeedPhysics, maxMoveSpeedPhysics), rb.velocity.y, rb.velocity.z);
                 break;
 
             case Controls.Arcade:
@@ -143,5 +153,10 @@ public class PlayerMovement : MonoBehaviour {
     {
         get { return isTouchingRightWall; }
         set { isTouchingRightWall = value; }
+    }
+    public bool IsGrounded
+    {
+        get { return isGrounded; }
+        set { isGrounded = value; }
     }
 }

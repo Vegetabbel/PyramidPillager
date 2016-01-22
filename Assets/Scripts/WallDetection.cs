@@ -4,7 +4,7 @@ using System.Collections;
 public class WallDetection : MonoBehaviour {
 
     private PlayerMovement playerScript;
-    public enum PlayerSide {LeftSide, RightSide};
+    public enum PlayerSide {LeftSide, RightSide, Bottom};
     public PlayerSide ps;
 
     void Awake()
@@ -24,6 +24,10 @@ public class WallDetection : MonoBehaviour {
             {
                 playerScript.IsTouchingRightWall = true;
             }
+            if (ps == PlayerSide.Bottom)
+            {
+                playerScript.IsGrounded = true;
+            }
         }
     }
     void OnTriggerExit(Collider other)
@@ -32,6 +36,7 @@ public class WallDetection : MonoBehaviour {
         {
             playerScript.IsTouchingLeftWall = false;
             playerScript.IsTouchingRightWall = false;
+            playerScript.IsGrounded = false;
         }
     }
 }
