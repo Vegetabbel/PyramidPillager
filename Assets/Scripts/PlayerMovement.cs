@@ -8,19 +8,22 @@ public class PlayerMovement : MonoBehaviour {
     private float moveSpeedPhysics; //'Active' move speed, set in Update()
     private float groundMoveSpeedPhysics = 100f;
     private float airMoveSpeedPhysics; //Is set in Start()
-    private float sprintMoveSpeedPhysics = 100f; //Is added on top of normal move speed
+    private float sprintMoveSpeedPhysics = 150f;
     private float maxMoveSpeedPhysics; //'Active max move speed, set in Update() and Start()
     private float normalMaxMoveSpeedPhysics = 8f;
     private float sprintMaxMoveSpeedPhysics = 16f;
 
     private float moveSpeedArcade = 10f;
 
-    private float jumpForce = 120f;
+    private float jumpForce = 500f;
     private float wallJumpForce = 200f;
 
     private bool isGrounded = false;
     private bool isTouchingLeftWall = false;
     private bool isTouchingRightWall = false;
+
+    public GameObject bottomLeftCorner;
+    public GameObject bottomRightCorner;
 
     public enum Controls {Physics, Arcade};
     public Controls controlState;
@@ -29,12 +32,24 @@ public class PlayerMovement : MonoBehaviour {
 	void Start ()
     {
         rb = GetComponent<Rigidbody>();
-        airMoveSpeedPhysics = groundMoveSpeedPhysics * 0.2f;
+        airMoveSpeedPhysics = groundMoveSpeedPhysics * 0.1f;
         maxMoveSpeedPhysics = normalMaxMoveSpeedPhysics;
 	}
 
     void Update()
     {
+        //Check if player is standing on something
+        if (Physics.Raycast(bottomLeftCorner.transform.position, -Vector3.up, 0.2f) ||
+            Physics.Raycast(bottomRightCorner.transform.position, -Vector3.up, 0.2f))
+        {
+            isGrounded = true;
+        }
+        else
+        {
+            isGrounded = false;
+        }
+
+        //Sprinting
         if (Input.GetKey(KeyCode.LeftShift) || !isGrounded)
         {
             maxMoveSpeedPhysics = sprintMaxMoveSpeedPhysics;
@@ -51,6 +66,8 @@ public class PlayerMovement : MonoBehaviour {
         {
             moveSpeedPhysics = normalMaxMoveSpeedPhysics;
         }
+
+        //Set movement speed in air
         if (!isGrounded)
         {
             moveSpeedPhysics = airMoveSpeedPhysics;
@@ -61,15 +78,6 @@ public class PlayerMovement : MonoBehaviour {
             moveSpeedPhysics = groundMoveSpeedPhysics;            
             moveSpeedArcade = 10f;
         }
-
-        /*if (Physics.Raycast(gameObject.transform.position, -Vector3.up, 1f))
-        {
-            isGrounded = true;
-        }
-        else
-        {
-            isGrounded = false;
-        }*/
     }
 
     void FixedUpdate ()
@@ -95,23 +103,26 @@ public class PlayerMovement : MonoBehaviour {
                         rb.AddForce(0, jumpForce, 0);
                     }
                 }
+                //Wall jump
                 else
                 {
                     if (isTouchingLeftWall)
                     {
-                        if (Input.GetKey(KeyCode.Space))
+                        if (Input.GetKeyDown(KeyCode.Space))
                         {
-                            rb.AddForce(wallJumpForce, jumpForce * 0.3f, 0);
+                            rb.AddForce(wallJumpForce, jumpForce * 0.5f, 0);
                         }
                     }
                     if (isTouchingRightWall)
                     {
-                        if (Input.GetKey(KeyCode.Space))
+                        if (Input.GetKeyDown(KeyCode.Space))
                         {
-                            rb.AddForce(-1 * wallJumpForce, jumpForce * 0.3f, 0);
+                            rb.AddForce(-1 * wallJumpForce, jumpForce * 0.5f, 0);
                         }
                     }
                 } 
+
+                //Restrict maximum movement speed
                 rb.velocity = new Vector3(Mathf.Clamp(rb.velocity.x, -maxMoveSpeedPhysics, maxMoveSpeedPhysics), rb.velocity.y, rb.velocity.z);
                 break;
                  

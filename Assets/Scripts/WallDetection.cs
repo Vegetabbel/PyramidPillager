@@ -24,10 +24,11 @@ public class WallDetection : MonoBehaviour {
             {
                 playerScript.IsTouchingRightWall = true;
             }
+            /*
             if (ps == PlayerSide.Bottom)
             {
                 playerScript.IsGrounded = true;
-            }
+            }*/
         }
     }
     void OnTriggerExit(Collider other)
@@ -36,7 +37,7 @@ public class WallDetection : MonoBehaviour {
         {
             playerScript.IsTouchingLeftWall = false;
             playerScript.IsTouchingRightWall = false;
-            playerScript.IsGrounded = false;
+            //playerScript.IsGrounded = false;
         }
     }
 }
