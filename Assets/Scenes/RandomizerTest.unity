@@ -97,6 +97,7 @@ GameObject:
   - 92: {fileID: 454317603}
   - 124: {fileID: 454317602}
   - 81: {fileID: 454317601}
+  - 114: {fileID: 454317606}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -171,6 +172,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!114 &454317606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 454317600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb162dd7db0c3c4488255e0f4498d119, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
 --- !u!1 &995348569
 GameObject:
   m_ObjectHideFlags: 0
@@ -206,6 +219,8 @@ MonoBehaviour:
   levelPrefabTreasureRoom: {fileID: 115382, guid: dbcf67a6516424e4c923de21df0234b6,
     type: 2}
   treasureRoomPlace: 5
+  newLevelKey: 109
+  playerPrefab: {fileID: 177964, guid: b11befacb2bbb6246bdb9f73e4acb021, type: 2}
 --- !u!4 &995348571
 Transform:
   m_ObjectHideFlags: 0

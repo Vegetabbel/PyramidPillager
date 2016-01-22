@@ -12,10 +12,10 @@ public class LevelController : MonoBehaviour
 
     private bool firstLevelReady = false;
     private GameObject lastInitializedLevel;
+    private GameObject newLevel;
     private Vector3 lastEndpoint;
     private Vector3 newStartpoint;
-    public Vector3 nextEndpointWorldSpace;
-    private GameObject newLevel;
+    private Vector3 nextEndpointWorldSpace;
     private int currentLevel = 0;
     private GameObject player;
 
@@ -61,7 +61,8 @@ public class LevelController : MonoBehaviour
                     break;
             }
             newLevel.transform.position = lastInitializedLevel.transform.position + lastEndpoint - newStartpoint;
-            lastInitializedLevel = newLevel;   
+            Destroy(lastInitializedLevel, 1f);
+            lastInitializedLevel = newLevel;
         }
         nextEndpointWorldSpace = lastInitializedLevel.transform.Find("Endpoint").position;
 
@@ -81,7 +82,6 @@ public class LevelController : MonoBehaviour
         player = (GameObject)Instantiate(playerPrefab, lastInitializedLevel.transform.Find("Startpoint").position, Quaternion.identity);
         Camera.main.GetComponent<CameraFollow>().target = player;
     }
-
 
     void Update()
     {
