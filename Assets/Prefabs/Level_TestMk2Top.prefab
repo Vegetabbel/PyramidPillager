@@ -124,7 +124,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &141140
 GameObject:
   m_ObjectHideFlags: 1
@@ -190,7 +190,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &147588
 GameObject:
   m_ObjectHideFlags: 1
@@ -269,6 +269,7 @@ GameObject:
   - 65: {fileID: 6535394}
   - 65: {fileID: 6599014}
   - 65: {fileID: 6556602}
+  - 114: {fileID: 11431932}
   m_Layer: 0
   m_Name: CloseTrigger
   m_TagString: Untagged
@@ -311,7 +312,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &183656
 GameObject:
   m_ObjectHideFlags: 1
@@ -329,7 +330,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &188660
 GameObject:
   m_ObjectHideFlags: 0
@@ -1245,6 +1246,17 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 129686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a461635fc12cab24ca0b20a9a842dd1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &11431932
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 167834}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a461635fc12cab24ca0b20a9a842dd1c, type: 3}

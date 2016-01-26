@@ -53,7 +53,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &121364
 GameObject:
   m_ObjectHideFlags: 1
@@ -71,7 +71,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &121672
 GameObject:
   m_ObjectHideFlags: 1
@@ -165,6 +165,7 @@ GameObject:
   - 65: {fileID: 6564160}
   - 65: {fileID: 6582746}
   - 65: {fileID: 6513788}
+  - 114: {fileID: 11485006}
   m_Layer: 0
   m_Name: CloseTrigger
   m_TagString: Untagged
@@ -189,7 +190,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &167526
 GameObject:
   m_ObjectHideFlags: 1
@@ -290,7 +291,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &185160
 GameObject:
   m_ObjectHideFlags: 1
@@ -1252,6 +1253,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelExitDirection: 2
   levelEntryDirection: 0
+--- !u!114 &11485006
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 161764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a461635fc12cab24ca0b20a9a842dd1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11492840
 MonoBehaviour:
   m_ObjectHideFlags: 1

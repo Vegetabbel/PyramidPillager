@@ -14,8 +14,12 @@ public enum LevelExitdirection { left, top, right, bottom }
 
 public class LevelControllerMk2 : MonoBehaviour
 {
+    /// <summary>
+    /// pasdasdasdasdasd
+    /// </summary>
     public GameObject playerPrefab;
     public LevelPrefabs levelPrefabs;
+    public GameObject previousLevel;
 
     private GameObject player;
     private bool firstLevelReady = false;
@@ -32,7 +36,7 @@ public class LevelControllerMk2 : MonoBehaviour
         CreatePlayer();
     }
 
-    void RandomizeLevel()
+    public void RandomizeLevel()
     {
         if (!firstLevelReady)
         {
@@ -42,6 +46,11 @@ public class LevelControllerMk2 : MonoBehaviour
         }
         else
         {
+            if (previousLevel)
+            {
+                Destroy(previousLevel);
+            }
+
             switch (levelExitDirection)
             {
                 case LevelExitdirection.left:
@@ -76,8 +85,8 @@ public class LevelControllerMk2 : MonoBehaviour
                     break;
             }
             newLevel.transform.position = currentLevel.transform.position + currentExitpoint - newStartpoint;
-            //Destroy(currentLevel, 1f);
             levelExitDirection = newLevel.GetComponent<ExitLocation>().levelExitDirection;
+            previousLevel = currentLevel;
             currentLevel = newLevel;
         }
         /*nextEndpointWorldSpace = currentLevel.transform.Find("Endpoint").position;

@@ -83,7 +83,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &121590
 GameObject:
   m_ObjectHideFlags: 1
@@ -119,7 +119,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &127750
 GameObject:
   m_ObjectHideFlags: 1
@@ -173,7 +173,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &139486
 GameObject:
   m_ObjectHideFlags: 1
@@ -245,7 +245,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &155862
 GameObject:
   m_ObjectHideFlags: 1
@@ -276,6 +276,7 @@ GameObject:
   - 65: {fileID: 6590750}
   - 65: {fileID: 6500096}
   - 65: {fileID: 6564748}
+  - 114: {fileID: 11485182}
   m_Layer: 0
   m_Name: CloseTrigger
   m_TagString: Untagged
@@ -336,7 +337,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 461414}
-  - 114: {fileID: 11449756}
   - 114: {fileID: 11408242}
   m_Layer: 0
   m_Name: Level_TestMk2Bottom
@@ -1252,12 +1252,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelExitDirection: 3
   levelEntryDirection: 0
---- !u!114 &11449756
+--- !u!114 &11485182
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 171928}
+  m_GameObject: {fileID: 161486}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a461635fc12cab24ca0b20a9a842dd1c, type: 3}

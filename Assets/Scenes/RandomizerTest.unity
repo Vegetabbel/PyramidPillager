@@ -184,48 +184,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
---- !u!1001 &630440534
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 461414, guid: 49d813a3386368a48bd6a902b2e5886e, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 461414, guid: 49d813a3386368a48bd6a902b2e5886e, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 461414, guid: 49d813a3386368a48bd6a902b2e5886e, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 461414, guid: 49d813a3386368a48bd6a902b2e5886e, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 461414, guid: 49d813a3386368a48bd6a902b2e5886e, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 461414, guid: 49d813a3386368a48bd6a902b2e5886e, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 461414, guid: 49d813a3386368a48bd6a902b2e5886e, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 461414, guid: 49d813a3386368a48bd6a902b2e5886e, type: 2}
-      propertyPath: m_RootOrder
-      value: 3
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 49d813a3386368a48bd6a902b2e5886e, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &995348569
 GameObject:
   m_ObjectHideFlags: 0
@@ -237,7 +195,7 @@ GameObject:
   - 114: {fileID: 995348572}
   m_Layer: 0
   m_Name: GameController
-  m_TagString: Untagged
+  m_TagString: GameController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -283,6 +241,7 @@ MonoBehaviour:
     - {fileID: 116004, guid: 6e7dade5e4026904cb3aa7179758509f, type: 2}
     - {fileID: 172360, guid: 4d6f1c16c19dccf4daab7f8ad354bae2, type: 2}
     - {fileID: 129686, guid: edb999cbc3db65546a9b9e7d86a6252d, type: 2}
+  previousLevel: {fileID: 0}
 --- !u!1 &2046229709
 GameObject:
   m_ObjectHideFlags: 0
