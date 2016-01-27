@@ -5,11 +5,6 @@ public class PlayerMovement : MonoBehaviour {
 
     private Rigidbody rb;
 
-    public PhysicMaterial movingMaterial;
-    public PhysicMaterial idleMaterial;
-
-    private bool isAlive = true;
-
     private float moveSpeedPhysics; //'Active' move speed, set in Update()
     private float groundMoveSpeedPhysics = 100f;
     private float airMoveSpeedPhysics; //Is set in Start()
@@ -20,19 +15,12 @@ public class PlayerMovement : MonoBehaviour {
 
     private float moveSpeedArcade = 10f;
 
-    private float jumpHold;
-    public float jumpForceMax = 500f;
-    public float jumpForceMin = 100f;
-    private float jumpMaxHeight;
-    public float wallJumpForce = 500f;
+    private float jumpForce = 500f;
+    private float wallJumpForce = 200f;
 
-    public enum PlayerState { Idle, Moving, Sprinting, Soaring, Falling, TouchingLeftWall, TouchingRightWall}
-    public PlayerState playerState;
     private bool isGrounded = false;
     private bool isTouchingLeftWall = false;
     private bool isTouchingRightWall = false;
-    public enum PlayerForm { Isis, };
-    public PlayerForm playerForm = PlayerForm.Isis;
 
     public GameObject bottomLeftCorner;
     public GameObject bottomRightCorner;
@@ -50,10 +38,6 @@ public class PlayerMovement : MonoBehaviour {
 
     void Update()
     {
-        if (!isAlive)
-        {
-            Destroy(gameObject);
-        }
         //Check if player is standing on something
         if (Physics.Raycast(bottomLeftCorner.transform.position, -Vector3.up, 0.2f) ||
             Physics.Raycast(bottomRightCorner.transform.position, -Vector3.up, 0.2f))
@@ -104,8 +88,8 @@ public class PlayerMovement : MonoBehaviour {
                 //Move left
                 if (Input.GetKey(KeyCode.A))
                 {
-                    rb.AddForce(-moveSpeedPhysics, 0, 0);
-                }              
+                    rb.AddForce(-1 * moveSpeedPhysics, 0, 0);
+                }
                 //Move right
                 if (Input.GetKey(KeyCode.D))
                 {
@@ -114,40 +98,10 @@ public class PlayerMovement : MonoBehaviour {
                 //Jump
                 if (isGrounded)
                 {
-                    if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+                    if (Input.GetKey(KeyCode.Space))
                     {
-                        if (rb.velocity.x < 1)
-                        {
-                            rb.velocity = new Vector3(rb.velocity.x + 0.3f, rb.velocity.y, rb.velocity.z);
-                        }
-                        else if (rb.velocity.x > 1)
-                        {
-                            rb.velocity = new Vector3(rb.velocity.x - 0.3f, rb.velocity.y, rb.velocity.z);
-                        }
-                        if ((rb.velocity.x <= 1 && rb.velocity.x >= 0) || (rb.velocity.x >= 1 && rb.velocity.x <= 0))
-                        {
-                            rb.velocity = new Vector3(0, rb.velocity.y, rb.velocity.z);
-                        }
-                    }                  
-                }
-                Debug.Log(jumpHold);
-
-                if (Input.GetKey(KeyCode.Space))
-                {
-                    jumpHold += 3000 * Time.deltaTime;
-                    if (jumpHold < jumpForceMax && isGrounded)
-                    {
-                        rb.useGravity = false;
-                        rb.velocity = new Vector3(rb.velocity.x, 23, rb.velocity.z);                     
+                        rb.AddForce(0, jumpForce, 0);
                     }
-                    else
-                    {
-                        rb.useGravity = true;
-                    }
-                }
-                if (Input.GetKeyUp(KeyCode.Space))
-                {
-                    jumpHold = 0;
                 }
                 //Wall jump
                 else
@@ -156,14 +110,14 @@ public class PlayerMovement : MonoBehaviour {
                     {
                         if (Input.GetKeyDown(KeyCode.Space))
                         {
-                            rb.AddForce(wallJumpForce, jumpForceMax * 0.5f, 0);
+                            rb.AddForce(wallJumpForce, jumpForce * 0.5f, 0);
                         }
                     }
                     if (isTouchingRightWall)
                     {
                         if (Input.GetKeyDown(KeyCode.Space))
                         {
-                            rb.AddForce(-1 * wallJumpForce, jumpForceMax * 0.5f, 0);
+                            rb.AddForce(-1 * wallJumpForce, jumpForce * 0.5f, 0);
                         }
                     }
                 } 
@@ -192,7 +146,7 @@ public class PlayerMovement : MonoBehaviour {
                 {
                     if (Input.GetKey(KeyCode.Space))
                     {
-                        rb.AddForce(0, jumpForceMax, 0);
+                        rb.AddForce(0, jumpForce, 0);
                     }
                 }
                 else
@@ -201,14 +155,14 @@ public class PlayerMovement : MonoBehaviour {
                     {
                         if (Input.GetKey(KeyCode.Space))
                         {
-                            rb.AddForce(wallJumpForce, jumpForceMax * 0.5f, 0);
+                            rb.AddForce(wallJumpForce, jumpForce * 0.5f, 0);
                         }
                     }
                     if (isTouchingRightWall)
                     {
                         if (Input.GetKey(KeyCode.Space))
                         {
-                            rb.AddForce(-1 * wallJumpForce, jumpForceMax * 0.5f, 0);
+                            rb.AddForce(-1 * wallJumpForce, jumpForce * 0.5f, 0);
                         }
                     }
                 }
@@ -233,10 +187,5 @@ public class PlayerMovement : MonoBehaviour {
     {
         get { return isGrounded; }
         set { isGrounded = value; }
-    }
-    public bool IsAlive
-    {
-        get { return isAlive; }
-        set { isAlive = value; }
     }
 }
