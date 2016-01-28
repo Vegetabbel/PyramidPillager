@@ -12,7 +12,7 @@ public class WallDetection : MonoBehaviour {
         playerScript = GetComponentInParent<PlayerMovement>();
     }
 
-    void OnTriggerEnter(Collider other)
+    void OnTriggerStay(Collider other)
     {
         if (other.tag == "wall")
         {
