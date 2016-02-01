@@ -11,7 +11,12 @@ public class PlayerMovement : MonoBehaviour {
     public enum PlayerForm { Isis, Hawk, Cat, Ghost };
     public PlayerForm playerForm;
 
-    private float formGaugeCurrentValue;
+    public Sprite IsisSprite;
+    public Sprite HawkSprite;
+    public Sprite CatSprite;
+    public Sprite GhostSprite;
+
+    private float formGaugeCurrentValue = 1;
     public float formGaugeMaxValue;
 
     private float accelerationSpeedActive;          //Active move speed, set in Update()
@@ -29,43 +34,82 @@ public class PlayerMovement : MonoBehaviour {
     public float wallJumpForceHoriz = 800f;                //Should be around 800f
     public float wallJumpForceVerti = 600f;                //Should be around 600f
 
+    public float slowingSpeed = 0.6f;                      //How fast the player slows down on ground, should be around 0.6f
+    public float minMoveSpeed = 2f;                      //Player will stop instantly when x-velocity goes below this (on ground), should be around 2f
+
     private bool isGrounded = false;
     private bool ableToJump = false;
     private bool isTouchingLeftWall = false;
     private bool isTouchingRightWall = false;
 
-    public float slowingSpeed = 0.6f;                      //How fast the player slows down on ground, should be around 0.6f
-    public float minMoveSpeed = 2f;                      //Player will stop instantly when x-velocity goes below this (on ground), should be around 2f
+    //Hawk values
+    public float hawkMoveSpeedVer = 150f;
+    public float hawkMoveSpeedVerMax = 12f;
+
+    public float hawkMoveSpeedHor = 100f;
+    public float hawkMoveSpeedHorMax = 8f;
+
+    public float hawkMinMoveSpeedHor = 2.5f;
+    public float hawkSlowingSpeedHor = 1.2f;
+
+    public float hawkMinMoveSpeedVer = 2f;
+    public float hawkSlowingSpeedVer = 0.8f;
 
     private Rigidbody rb;
+    private Transform tr;
+    private BoxCollider bc;
+    private SpriteRenderer sr;
     public GameObject bottomLeftCorner;
     public GameObject bottomRightCorner;
 
 	void Start ()
     {
         rb = GetComponent<Rigidbody>();
+        tr = GetComponent<Transform>();
+        bc = GetComponent<BoxCollider>();
+        sr = GetComponent<SpriteRenderer>();
         maxMoveSpeedActive = maxMoveSpeedNormal;
         playerForm = PlayerForm.Isis;
     }
 
     void Update()
     {
+        //Debug.Log();
+
         //Death
         if (!isAlive)
         {
             Destroy(gameObject);
         }
 
-        /*if (formGaugeCurrentValue < 0 && Input.GetKeyDown)
+        //Transformations
+        if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-
-        }*/
+            playerForm = PlayerForm.Isis;
+        }
+        if (formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.Space) && Input.GetKey(KeyCode.Mouse0))
+        {
+            playerForm = PlayerForm.Hawk;
+        }
+        if (formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.Mouse0))
+        {
+            playerForm = PlayerForm.Cat;
+        }
+        if (formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.Mouse0))
+        {
+            playerForm = PlayerForm.Ghost;
+        }
 
         //Change controls based on active form
         switch (playerForm)
         {
             case PlayerForm.Isis:
                 #region
+
+                bc.size = new Vector3(1f, 1.8f, 1f);
+                rb.useGravity = true;
+                sr.sprite = IsisSprite;
+
                 //Check if player is standing on something
                 if (Physics.Raycast(bottomLeftCorner.transform.position, -Vector3.up, 0.2f) ||
                     Physics.Raycast(bottomRightCorner.transform.position, -Vector3.up, 0.2f))
@@ -189,6 +233,68 @@ public class PlayerMovement : MonoBehaviour {
             #endregion
             case PlayerForm.Hawk:
                 #region
+                bc.size = new Vector3(1f, 1f, 1f);
+                rb.useGravity = false;
+                sr.sprite = HawkSprite;
+
+                //Move left
+                if (Input.GetKey(KeyCode.A))
+                {
+                    rb.AddForce(-hawkMoveSpeedHor, 0f, 0f);
+                }
+                //Move right
+                if (Input.GetKey(KeyCode.D))
+                {
+                    rb.AddForce(hawkMoveSpeedHor, 0f, 0f);
+                }
+                //Move up
+                if (Input.GetKey(KeyCode.W))
+                {
+                    rb.AddForce(0f, hawkMoveSpeedVer, 0f);
+                }
+                //Move down
+                if (Input.GetKey(KeyCode.S))
+                {
+                    rb.AddForce(0f, -hawkMoveSpeedVer, 0f);
+                }
+                //Stopping horizontal
+                if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+                    {
+                        if (rb.velocity.x < hawkMinMoveSpeedHor)
+                        {
+                            rb.velocity = new Vector3(rb.velocity.x + hawkSlowingSpeedHor, rb.velocity.y, 0f);
+                        }
+                        else if (rb.velocity.x > hawkMinMoveSpeedHor)
+                        {
+                            rb.velocity = new Vector3(rb.velocity.x - hawkSlowingSpeedHor, rb.velocity.y, 0);
+                        }
+                        if ((rb.velocity.x <= hawkMinMoveSpeedHor && rb.velocity.x >= 0) || (rb.velocity.x >= hawkMinMoveSpeedHor && rb.velocity.x <= 0))
+                        {
+                            rb.velocity = new Vector3(0, rb.velocity.y, 0f);
+                        }
+                    }
+                //Stopping vertical
+                if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S))
+                {
+                    if (rb.velocity.y < hawkMinMoveSpeedVer)
+                    {
+                        rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y + hawkSlowingSpeedVer, 0f);
+                    }
+                    else if (rb.velocity.y > hawkMinMoveSpeedVer)
+                    {
+                        rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y - hawkSlowingSpeedVer, 0f);
+                    }
+                    if ((rb.velocity.y <= hawkMinMoveSpeedVer && rb.velocity.y >= 0) || (rb.velocity.y >= hawkMinMoveSpeedVer && rb.velocity.y <= 0))
+                    {
+                        rb.velocity = new Vector3(rb.velocity.x, 0f, 0f);
+                    }
+                }
+
+                //Restrict move speed to max
+                rb.velocity = new Vector3(Mathf.Clamp(  rb.velocity.x, -hawkMoveSpeedHorMax, hawkMoveSpeedHorMax),
+                                          Mathf.Clamp(  rb.velocity.y, -hawkMoveSpeedVerMax, hawkMoveSpeedVerMax),
+                                                        0f);
+
                 break;
             #endregion
             case PlayerForm.Cat:
