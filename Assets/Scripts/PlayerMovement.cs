@@ -1,48 +1,29 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerMovement : MonoBehaviour {
+[System.Serializable]
 
-    private bool isAlive = true;
+public class IsisValues
+{
+    public float accelerationSpeedNormal = 100f;        //Should be around 100f
+    public float accelerationSpeedSprint = 150f;        //Should be around 150f
+    public float accelerationSpeedAir = 10f;            //Should be about 1/10 of normal acceleration speed
 
-    public enum PlayerState { Idle, Moving, Sprinting, Soaring, Falling, TouchingLeftWall, TouchingRightWall }
-    public PlayerState playerState;
+    public float maxMoveSpeedNormal = 8f;               //Should be around 8f
+    public float maxMoveSpeedSprint = 16f;              //Should be around 16f
 
-    public enum PlayerForm { Isis, Hawk, Cat, Ghost };
-    public PlayerForm playerForm;
+    public float jumpForce = 16f;                       //Should be around 16f
+    public float jumpHoldTimeMax = 2f;                  //Should be around 2f
 
-    public Sprite IsisSprite;
-    public Sprite HawkSprite;
-    public Sprite CatSprite;
-    public Sprite GhostSprite;
+    public float wallJumpForceHoriz = 800f;             //Should be around 800f
+    public float wallJumpForceVerti = 600f;             //Should be around 600f
 
-    private float formGaugeCurrentValue = 1;
-    public float formGaugeMaxValue;
+    public float slowingSpeed = 0.6f;                   //How fast the player slows down on ground, should be around 0.6f
+    public float minMoveSpeed = 2f;                     //Player will stop instantly when x-velocity goes below this (on ground), should be around 2f
 
-    private float accelerationSpeedActive;          //Active move speed, set in Update()
-    public float accelerationSpeedNormal = 100f;           //Should be around 100f
-    public float accelerationSpeedSprint = 150f;           //Should be around 150f
-    public float accelerationSpeedAir = 10f;              //Should be about 1/10 of normal acceleration speed
-    private float maxMoveSpeedActive;               //'Active max move speed, set in Update() and Start()
-    public float maxMoveSpeedNormal = 8f;                //Should be around 8f
-    public float maxMoveSpeedSprint = 16f;                //Should be around 16f
-
-    public float jumpForce = 16f;                         //Should be around 16f
-    private float jumpHoldTime;                      
-    public float jumpHoldTimeMax = 2f;                   //Should be around 2f
-
-    public float wallJumpForceHoriz = 800f;                //Should be around 800f
-    public float wallJumpForceVerti = 600f;                //Should be around 600f
-
-    public float slowingSpeed = 0.6f;                      //How fast the player slows down on ground, should be around 0.6f
-    public float minMoveSpeed = 2f;                      //Player will stop instantly when x-velocity goes below this (on ground), should be around 2f
-
-    private bool isGrounded = false;
-    private bool ableToJump = false;
-    private bool isTouchingLeftWall = false;
-    private bool isTouchingRightWall = false;
-
-    //Hawk values
+}
+public class HawkValues
+{
     public float hawkMoveSpeedVer = 150f;
     public float hawkMoveSpeedVerMax = 12f;
 
@@ -54,6 +35,65 @@ public class PlayerMovement : MonoBehaviour {
 
     public float hawkMinMoveSpeedVer = 2f;
     public float hawkSlowingSpeedVer = 0.8f;
+}
+public class CatValues
+{
+    public float catAccelerationSpeedNormal = 200f;
+    public float catAccelerationSpeedAir = 80f;
+    public float catMaxMoveSpeed = 20f;
+
+    public float catJumpForce = 8f;
+    public float catJumpHoldTimeMax = 2f;
+
+    public float catSlowingSpeed = 1f;                      //How fast the player slows down on ground
+    public float catMinMoveSpeed = 3.5f;                    //Player will stop instantly when x-velocity goes below this (on ground)
+}
+public class GhostValues
+{
+
+}
+
+public class PlayerMovement : MonoBehaviour {
+
+    private bool isAlive = true;
+
+    public enum PlayerState { Idle, Moving, Sprinting, Soaring, Falling, TouchingLeftWall, TouchingRightWall }
+    public PlayerState playerState;
+
+    public enum PlayerForm { Isis, Hawk, Cat, Ghost };
+    public PlayerForm playerForm;
+
+    public Sprite isisSprite;
+    public Sprite hawkSprite;
+    public Sprite catSprite;
+    public Sprite ghostSprite;
+
+    private float formGaugeCurrentValue = 1;
+    public float formGaugeMaxValue;
+
+    //Isis values
+    public IsisValues isisValues = new IsisValues();
+
+    private float accelerationSpeedActive;              //Active move speed, set in Update()
+    private float maxMoveSpeedActive;                   //'Active max move speed, set in Update() and Start()
+    private float jumpHoldTime;                      
+   
+    private bool isGrounded = false;
+    private bool ableToJump = false;
+    private bool isTouchingLeftWall = false;
+    private bool isTouchingRightWall = false;
+
+    //Hawk values
+    public HawkValues hawkValues = new HawkValues();
+
+    //Cat values
+    public CatValues catValues = new CatValues();
+    private float catAccelerationSpeedActive;               //Set in Update()
+    private float catJumpHoldTime;
+
+    //Ghost values
+    public GhostValues ghostValues = new GhostValues();
+
 
     private Rigidbody rb;
     private Transform tr;
@@ -68,7 +108,7 @@ public class PlayerMovement : MonoBehaviour {
         tr = GetComponent<Transform>();
         bc = GetComponent<BoxCollider>();
         sr = GetComponent<SpriteRenderer>();
-        maxMoveSpeedActive = maxMoveSpeedNormal;
+        maxMoveSpeedActive = isisValues.maxMoveSpeedNormal;
         playerForm = PlayerForm.Isis;
     }
 
@@ -108,7 +148,7 @@ public class PlayerMovement : MonoBehaviour {
 
                 bc.size = new Vector3(1f, 1.8f, 1f);
                 rb.useGravity = true;
-                sr.sprite = IsisSprite;
+                sr.sprite = isisSprite;
 
                 //Check if player is standing on something
                 if (Physics.Raycast(bottomLeftCorner.transform.position, -Vector3.up, 0.2f) ||
@@ -124,29 +164,29 @@ public class PlayerMovement : MonoBehaviour {
                 //Sprinting
                 if (Input.GetKey(KeyCode.LeftShift) || !isGrounded)
                 {
-                    maxMoveSpeedActive = maxMoveSpeedSprint;
+                    maxMoveSpeedActive = isisValues.maxMoveSpeedSprint;
                 }
                 else
                 {
-                    maxMoveSpeedActive = maxMoveSpeedNormal;
+                    maxMoveSpeedActive = isisValues.maxMoveSpeedNormal;
                 }
                 if (Input.GetKey(KeyCode.LeftShift) && isGrounded)
                 {
-                    accelerationSpeedActive = accelerationSpeedSprint;
+                    accelerationSpeedActive = isisValues.accelerationSpeedSprint;
                 }
                 else
                 {
-                    accelerationSpeedActive = maxMoveSpeedNormal;
+                    accelerationSpeedActive = isisValues.maxMoveSpeedNormal;
                 }
 
                 //Set movement speed in air
                 if (!isGrounded)
                 {
-                    accelerationSpeedActive = accelerationSpeedAir;
+                    accelerationSpeedActive = isisValues.accelerationSpeedAir;
                 }
                 else
                 {
-                    accelerationSpeedActive = accelerationSpeedNormal;
+                    accelerationSpeedActive = isisValues.accelerationSpeedNormal;
                 }
 
                 //Move left
@@ -164,15 +204,15 @@ public class PlayerMovement : MonoBehaviour {
                 {
                     if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
                     {
-                        if (rb.velocity.x < minMoveSpeed)
+                        if (rb.velocity.x < isisValues.minMoveSpeed)
                         {
-                            rb.velocity = new Vector3(rb.velocity.x + slowingSpeed, rb.velocity.y, 0f);
+                            rb.velocity = new Vector3(rb.velocity.x + isisValues.slowingSpeed, rb.velocity.y, 0f);
                         }
-                        else if (rb.velocity.x > minMoveSpeed)
+                        else if (rb.velocity.x > isisValues.minMoveSpeed)
                         {
-                            rb.velocity = new Vector3(rb.velocity.x - slowingSpeed, rb.velocity.y, 0);
+                            rb.velocity = new Vector3(rb.velocity.x - isisValues.slowingSpeed, rb.velocity.y, 0);
                         }
-                        if ((rb.velocity.x <= minMoveSpeed && rb.velocity.x >= 0) || (rb.velocity.x >= minMoveSpeed && rb.velocity.x <= 0))
+                        if ((rb.velocity.x <= isisValues.minMoveSpeed && rb.velocity.x >= 0) || (rb.velocity.x >= isisValues.minMoveSpeed && rb.velocity.x <= 0))
                         {
                             rb.velocity = new Vector3(0, rb.velocity.y, 0f);
                         }
@@ -191,11 +231,11 @@ public class PlayerMovement : MonoBehaviour {
 
                     jumpHoldTime += 10 * Time.deltaTime;
 
-                    if (jumpHoldTime <= jumpHoldTimeMax)
+                    if (jumpHoldTime <= isisValues.jumpHoldTimeMax)
                     {
-                        rb.velocity = new Vector3(rb.velocity.x, jumpForce, 0);
+                        rb.velocity = new Vector3(rb.velocity.x, isisValues.jumpForce, 0);
                     }
-                    else if (jumpHoldTime > jumpHoldTimeMax)
+                    else if (jumpHoldTime > isisValues.jumpHoldTimeMax)
                     {
                         jumpHoldTime = 0;
                         ableToJump = false;
@@ -215,14 +255,14 @@ public class PlayerMovement : MonoBehaviour {
                     {
                         if (Input.GetKeyDown(KeyCode.Space))
                         {
-                            rb.AddForce(wallJumpForceHoriz, wallJumpForceVerti, 0);
+                            rb.AddForce(isisValues.wallJumpForceHoriz, isisValues.wallJumpForceVerti, 0);
                         }
                     }
                     if (isTouchingRightWall && !isGrounded)
                     {
                         if (Input.GetKeyDown(KeyCode.Space))
                         {
-                            rb.AddForce(-1 * wallJumpForceHoriz, wallJumpForceVerti, 0);
+                            rb.AddForce(-1 * isisValues.wallJumpForceHoriz, isisValues.wallJumpForceVerti, 0);
                         }
                     }
                 }
@@ -235,40 +275,40 @@ public class PlayerMovement : MonoBehaviour {
                 #region
                 bc.size = new Vector3(1f, 1f, 1f);
                 rb.useGravity = false;
-                sr.sprite = HawkSprite;
+                sr.sprite = hawkSprite;
 
                 //Move left
                 if (Input.GetKey(KeyCode.A))
                 {
-                    rb.AddForce(-hawkMoveSpeedHor, 0f, 0f);
+                    rb.AddForce(-hawkValues.hawkMoveSpeedHor, 0f, 0f);
                 }
                 //Move right
                 if (Input.GetKey(KeyCode.D))
                 {
-                    rb.AddForce(hawkMoveSpeedHor, 0f, 0f);
+                    rb.AddForce(hawkValues.hawkMoveSpeedHor, 0f, 0f);
                 }
                 //Move up
                 if (Input.GetKey(KeyCode.W))
                 {
-                    rb.AddForce(0f, hawkMoveSpeedVer, 0f);
+                    rb.AddForce(0f, hawkValues.hawkMoveSpeedVer, 0f);
                 }
                 //Move down
                 if (Input.GetKey(KeyCode.S))
                 {
-                    rb.AddForce(0f, -hawkMoveSpeedVer, 0f);
+                    rb.AddForce(0f, -hawkValues.hawkMoveSpeedVer, 0f);
                 }
                 //Stopping horizontal
                 if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
                     {
-                        if (rb.velocity.x < hawkMinMoveSpeedHor)
+                        if (rb.velocity.x < hawkValues.hawkMinMoveSpeedHor)
                         {
-                            rb.velocity = new Vector3(rb.velocity.x + hawkSlowingSpeedHor, rb.velocity.y, 0f);
+                            rb.velocity = new Vector3(rb.velocity.x + hawkValues.hawkSlowingSpeedHor, rb.velocity.y, 0f);
                         }
-                        else if (rb.velocity.x > hawkMinMoveSpeedHor)
+                        else if (rb.velocity.x > hawkValues.hawkMinMoveSpeedHor)
                         {
-                            rb.velocity = new Vector3(rb.velocity.x - hawkSlowingSpeedHor, rb.velocity.y, 0);
+                            rb.velocity = new Vector3(rb.velocity.x - hawkValues.hawkSlowingSpeedHor, rb.velocity.y, 0);
                         }
-                        if ((rb.velocity.x <= hawkMinMoveSpeedHor && rb.velocity.x >= 0) || (rb.velocity.x >= hawkMinMoveSpeedHor && rb.velocity.x <= 0))
+                        if ((rb.velocity.x <= hawkValues.hawkMinMoveSpeedHor && rb.velocity.x >= 0) || (rb.velocity.x >= hawkValues.hawkMinMoveSpeedHor && rb.velocity.x <= 0))
                         {
                             rb.velocity = new Vector3(0, rb.velocity.y, 0f);
                         }
@@ -276,29 +316,116 @@ public class PlayerMovement : MonoBehaviour {
                 //Stopping vertical
                 if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S))
                 {
-                    if (rb.velocity.y < hawkMinMoveSpeedVer)
+                    if (rb.velocity.y < hawkValues.hawkMinMoveSpeedVer)
                     {
-                        rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y + hawkSlowingSpeedVer, 0f);
+                        rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y + hawkValues.hawkSlowingSpeedVer, 0f);
                     }
-                    else if (rb.velocity.y > hawkMinMoveSpeedVer)
+                    else if (rb.velocity.y > hawkValues.hawkMinMoveSpeedVer)
                     {
-                        rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y - hawkSlowingSpeedVer, 0f);
+                        rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y - hawkValues.hawkSlowingSpeedVer, 0f);
                     }
-                    if ((rb.velocity.y <= hawkMinMoveSpeedVer && rb.velocity.y >= 0) || (rb.velocity.y >= hawkMinMoveSpeedVer && rb.velocity.y <= 0))
+                    if ((rb.velocity.y <= hawkValues.hawkMinMoveSpeedVer && rb.velocity.y >= 0) || (rb.velocity.y >= hawkValues.hawkMinMoveSpeedVer && rb.velocity.y <= 0))
                     {
                         rb.velocity = new Vector3(rb.velocity.x, 0f, 0f);
                     }
                 }
 
                 //Restrict move speed to max
-                rb.velocity = new Vector3(Mathf.Clamp(  rb.velocity.x, -hawkMoveSpeedHorMax, hawkMoveSpeedHorMax),
-                                          Mathf.Clamp(  rb.velocity.y, -hawkMoveSpeedVerMax, hawkMoveSpeedVerMax),
+                rb.velocity = new Vector3(Mathf.Clamp(  rb.velocity.x, -hawkValues.hawkMoveSpeedHorMax, hawkValues.hawkMoveSpeedHorMax),
+                                          Mathf.Clamp(  rb.velocity.y, -hawkValues.hawkMoveSpeedVerMax, hawkValues.hawkMoveSpeedVerMax),
                                                         0f);
 
                 break;
             #endregion
             case PlayerForm.Cat:
                 #region
+                bc.size = new Vector3(1.5f, 1f, 1f);
+                rb.useGravity = true;
+                sr.sprite = catSprite;
+
+                //Check if player is standing on something
+                if (Physics.Raycast(bottomLeftCorner.transform.position, -Vector3.up, 0.2f) ||
+                    Physics.Raycast(bottomRightCorner.transform.position, -Vector3.up, 0.2f))
+                {
+                    isGrounded = true;
+                }
+                else
+                {
+                    isGrounded = false;
+                }
+
+                //Set movement speed in air
+                if (!isGrounded)
+                {
+                    catAccelerationSpeedActive = catAccelerationSpeedAir;
+                }
+                else
+                {
+                    catAccelerationSpeedActive = catAccelerationSpeedNormal;
+                }
+
+                //Move left
+                if (Input.GetKey(KeyCode.A))
+                {
+                    rb.AddForce(-catAccelerationSpeedActive, 0, 0);
+                }
+                //Move right
+                if (Input.GetKey(KeyCode.D))
+                {
+                    rb.AddForce(catAccelerationSpeedActive, 0, 0);
+                }
+                //Friction / stopping
+                if (isGrounded)
+                {
+                    if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+                    {
+                        if (rb.velocity.x < catMinMoveSpeed)
+                        {
+                            rb.velocity = new Vector3(rb.velocity.x + catSlowingSpeed, rb.velocity.y, 0f);
+                        }
+                        else if (rb.velocity.x > catMinMoveSpeed)
+                        {
+                            rb.velocity = new Vector3(rb.velocity.x - catSlowingSpeed, rb.velocity.y, 0);
+                        }
+                        if ((rb.velocity.x <= catMinMoveSpeed && rb.velocity.x >= 0) || (rb.velocity.x >= catMinMoveSpeed && rb.velocity.x <= 0))
+                        {
+                            rb.velocity = new Vector3(0, rb.velocity.y, 0f);
+                        }
+                    }
+                }
+                //Jump
+                if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+                {
+                    catJumpHoldTime = 0;
+                    ableToJump = true;
+                    //Debug.Log("Jump check" + Time.timeSinceLevelLoad);
+                }
+                if (Input.GetKey(KeyCode.Space) && ableToJump)
+                {
+                    //Debug.Log("Jump hold" + Time.timeSinceLevelLoad);
+
+                    catJumpHoldTime += 10 * Time.deltaTime;
+
+                    if (catJumpHoldTime <= catJumpHoldTimeMax)
+                    {
+                        rb.velocity = new Vector3(rb.velocity.x, catJumpForce, 0);
+                    }
+                    else if (catJumpHoldTime > catJumpHoldTimeMax)
+                    {
+                        catJumpHoldTime = 0;
+                        ableToJump = false;
+                    }
+                }
+                if (Input.GetKeyUp(KeyCode.Space))
+                {
+                    ableToJump = false;
+                    catJumpHoldTime = 0;
+                    //Debug.Log("Jump release" + Time.timeSinceLevelLoad);
+                }
+
+                //Restrict maximum movement speed
+                rb.velocity = new Vector3(Mathf.Clamp(rb.velocity.x, -catMaxMoveSpeed, catMaxMoveSpeed), rb.velocity.y, 0f);
+
                 break;
             #endregion
             case PlayerForm.Ghost:
