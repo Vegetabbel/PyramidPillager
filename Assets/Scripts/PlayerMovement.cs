@@ -52,7 +52,10 @@ public class CatValues
 [System.Serializable]
 public class GhostValues
 {
-
+    public float accelerationSpeedNormal = 50f;        
+    public float accelerationSpeedAir = 50f;
+    public float maxMoveSpeedNormal = 4f;
+    public float gravityPercentage = 0.05f;             
 }
 
 public class PlayerMovement : MonoBehaviour {
@@ -95,6 +98,7 @@ public class PlayerMovement : MonoBehaviour {
 
     //Ghost values
     public GhostValues ghostValues = new GhostValues();
+    private float ghostAccelerationSpeedActive;
 
 
     private Rigidbody rb;
@@ -437,6 +441,66 @@ public class PlayerMovement : MonoBehaviour {
             #endregion
             case PlayerForm.Ghost:
                 #region
+                bc.size = new Vector3(1f, 1.8f, 1f);
+                rb.useGravity = false;
+                sr.sprite = ghostSprite;
+
+                //Lower gravity
+                rb.AddForce(-Vector3.up * ghostValues.gravityPercentage * Physics.gravity.magnitude);
+
+                //Check if player is standing on something
+                if (Physics.Raycast(bottomLeftCorner.transform.position, -Vector3.up, 0.2f) ||
+                    Physics.Raycast(bottomRightCorner.transform.position, -Vector3.up, 0.2f))
+                {
+                    isGrounded = true;
+                }
+                else
+                {
+                    isGrounded = false;
+                }
+
+                //Set movement speed in air
+                if (!isGrounded)
+                {
+                    ghostAccelerationSpeedActive = ghostValues.accelerationSpeedAir;
+                }
+                else
+                {
+                    ghostAccelerationSpeedActive = ghostValues.accelerationSpeedNormal;
+                }
+
+                //Move left
+                if (Input.GetKey(KeyCode.A))
+                {
+                    rb.AddForce(-ghostAccelerationSpeedActive, 0, 0);
+                }
+                //Move right
+                if (Input.GetKey(KeyCode.D))
+                {
+                    rb.AddForce(ghostAccelerationSpeedActive, 0, 0);
+                }
+                //Friction / stopping
+                if (isGrounded)
+                {
+                    if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+                    {
+                        if (rb.velocity.x < isisValues.minMoveSpeed)
+                        {
+                            rb.velocity = new Vector3(rb.velocity.x + isisValues.slowingSpeed, rb.velocity.y, 0f);
+                        }
+                        else if (rb.velocity.x > isisValues.minMoveSpeed)
+                        {
+                            rb.velocity = new Vector3(rb.velocity.x - isisValues.slowingSpeed, rb.velocity.y, 0);
+                        }
+                        if ((rb.velocity.x <= isisValues.minMoveSpeed && rb.velocity.x >= 0) || (rb.velocity.x >= isisValues.minMoveSpeed && rb.velocity.x <= 0))
+                        {
+                            rb.velocity = new Vector3(0, rb.velocity.y, 0f);
+                        }
+                    }
+                }
+                //Restrict maximum movement speed
+                rb.velocity = new Vector3(Mathf.Clamp(rb.velocity.x, -ghostValues.maxMoveSpeedNormal, ghostValues.maxMoveSpeedNormal), rb.velocity.y, 0f);
+
                 break;
             #endregion
             default:
