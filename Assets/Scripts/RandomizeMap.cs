@@ -3,7 +3,6 @@ using System.Collections;
 
 public class RandomizeMap : MonoBehaviour
 {
-	private bool firstLevelReady = false;
 	/// <summary>
 	/// MapRandomizing
 	/// </summary>
@@ -11,141 +10,85 @@ public class RandomizeMap : MonoBehaviour
 	public GameObject startRoom;
 	public GameObject playerPrefab;
 	private GameObject player;
-	private GameObject currentLevel;
-	private GameObject newLevel;
 
 	private GameObject startLevel;
-	private GameObject levelA;
-	private GameObject levelB;
 	private GameObject middleLevel;
 	private GameObject endLevel;
+	private GameObject[] horizontalLevels = new GameObject[15];
 
-	public GameObject[] prefabss;
-
-	private LevelExitdirection levelExitDirection;
+	public GameObject[] horizontalPrefabs;
+	GameObject childA;
+	GameObject childB;
 
 	private Vector3 respawnPoint;
-	int u = 0;
 
 	void Start()
 	{
-		prefabss = Resources.LoadAll<GameObject> ("Maps");
-		print (prefabss.Length);
-		ArrayRandom (prefabss);
+		horizontalPrefabs = Resources.LoadAll<GameObject> ("Maps");
+		print (horizontalPrefabs.Length);
 
+		horizontalPrefabs = ArrayRandom (horizontalPrefabs);
 		RandomizeLevel();
 		CreatePlayer();
 	}
 	
 	public void RandomizeLevel()
 	{
-		if (!firstLevelReady)
-		{
-			startLevel = (GameObject)Instantiate(startRoom, Vector3.zero, Quaternion.identity);
-			startLevel.transform.Rotate(new Vector3(90,90,0));
-			GameObject childStart = startLevel.gameObject.transform.FindChild("BindPointExit").gameObject;
-			respawnPoint = startLevel.transform.Find("SpawnPoint").position;
+		startLevel = (GameObject)Instantiate(startRoom, Vector3.zero, Quaternion.identity);
+		startLevel.transform.Rotate(new Vector3(90,90,0));
+		respawnPoint = startLevel.transform.Find("SpawnPoint").position;
 
-			levelA = (GameObject)Instantiate(prefabss[u], Vector3.zero, Quaternion.identity);
-			levelA.transform.Rotate(new Vector3(90,90,0));
-			u++;
-			GameObject childA = levelA.gameObject.transform.FindChild("BindPointEntry").gameObject;
+		childA = startLevel.gameObject.transform.FindChild("BindPointExit").gameObject;
 
-
-
-			Vector3 offset = childStart.transform.position - childA.transform.position;
-			levelA.transform.position += offset;
-
-
-
-			levelB = (GameObject)Instantiate(prefabss[u], Vector3.zero, Quaternion.identity);
-			levelB.transform.Rotate(new Vector3(90,90,0));
-			u++;
-			GameObject childB = levelB.gameObject.transform.FindChild("BindPointEntry").gameObject;
-
-
-			//currentLevel = (GameObject)Instantiate(prefabss[0], Vector3.zero, Quaternion.identity);
-			//currentLevel.transform.Rotate(new Vector3(90,90,0));
-
-			//newLevel = (GameObject)Instantiate(prefabss[1], Vector3.zero, Quaternion.identity);
-			//newLevel.transform.Rotate(new Vector3(90,90,0));
-
-			//GameObject childA = currentLevel.gameObject.transform.FindChild("BindPointExit").gameObject;
-			//GameObject childB = newLevel.gameObject.transform.FindChild("BindPointEntry").gameObject;
-			//Vector3 offset = childA.transform.position - childB.transform.position;
-			//newLevel.transform.position += offset;
-
-			//GameObject block = (GameObject)Instantiate(doorBlock, currentLevel.gameObject.transform.FindChild("BindPointEntry").position, Quaternion.identity);
-			//block.transform.Rotate(new Vector3(90,90,0));
-
-			firstLevelReady = true;
+		for (int i = 0; i < 5; i++) {
+			SpawnRoom (i);
 		}
-		else
-		{
 
+		//For Middle room!!!!
+		/*
+		middleLevel = (GameObject)Instantiate(startRoom, Vector3.zero, Quaternion.identity);
+		middleLevel.transform.Rotate(new Vector3(90,90,0));
+		respawnPoint = middleLevel.transform.Find ("SpawnPoint").position;
 
-
-			/*
-			if (previousLevel)
-			{
-				Destroy(previousLevel);
-			}*/
-			
-			/*switch (levelExitDirection)
-			{
-			case LevelExitdirection.left:
-				currentExitpoint = currentLevel.transform.Find("Entrypoints/Left").localPosition;
-				newLevel = (GameObject)Instantiate(levelPrefabs.levelPrefabsRightEntry[Random.Range(0, levelPrefabs.levelPrefabsRightEntry.Length)], Vector3.zero, Quaternion.identity);
-				newLevel.GetComponent<ExitLocation>().levelEntryDirection = LevelExitdirection.right;
-				newStartpoint = newLevel.transform.Find("Entrypoints/Right").localPosition;
-				break;
-				
-			case LevelExitdirection.top:
-				currentExitpoint = currentLevel.transform.Find("Entrypoints/Top").localPosition;
-				newLevel = (GameObject)Instantiate(levelPrefabs.levelPrefabsBottomEntry[Random.Range(0, levelPrefabs.levelPrefabsBottomEntry.Length)], Vector3.zero, Quaternion.identity);
-				newLevel.GetComponent<ExitLocation>().levelEntryDirection = LevelExitdirection.bottom;
-				newStartpoint = newLevel.transform.Find("Entrypoints/Bottom").localPosition;
-				break;
-				
-			case LevelExitdirection.right:
-				currentExitpoint = currentLevel.transform.Find("Entrypoints/Right").localPosition;
-				newLevel = (GameObject)Instantiate(levelPrefabs.levelPrefabsLeftEntry[Random.Range(0, levelPrefabs.levelPrefabsLeftEntry.Length)], Vector3.zero, Quaternion.identity);
-				newLevel.GetComponent<ExitLocation>().levelEntryDirection = LevelExitdirection.left;
-				newStartpoint = newLevel.transform.Find("Entrypoints/Left").localPosition;
-				break;
-				
-			case LevelExitdirection.bottom:
-				currentExitpoint = currentLevel.transform.Find("Entrypoints/Bottom").localPosition;
-				newLevel = (GameObject)Instantiate(levelPrefabs.levelPrefabsTopEntry[Random.Range(0, levelPrefabs.levelPrefabsTopEntry.Length)], Vector3.zero, Quaternion.identity);
-				newLevel.GetComponent<ExitLocation>().levelEntryDirection = LevelExitdirection.top;
-				newStartpoint = newLevel.transform.Find("Entrypoints/Top").localPosition;
-				break;
-				
-			default:
-				break;
-			}*/
-			//newLevel.transform.position = currentLevel.transform.position + currentExitpoint - newStartpoint;
-			//levelExitDirection = newLevel.GetComponent<ExitLocation>().levelExitDirection;
-			//previousLevel = currentLevel;
-			//currentLevel = newLevel;
-		}
-		/*nextEndpointWorldSpace = currentLevel.transform.Find("Endpoint").position;
-        newStartpointWorldSpace = currentLevel.transform.Find("Startpoint").position;
-        blocker = currentLevel.transform.Find("Model/Door").gameObject;
-        blocker.SetActive(false);
-
-        if (currentLevel == treasureRoomPlace)
-        {
-            levelStyle = NextLevelStyle.TreasureRoom;
-        }
-        else if (currentLevel == treasureRoomPlace + 1)
-        {
-            levelStyle = NextLevelStyle.Vertical;
-        }
-        currentLevel++;*/
+		for (int i = 5; i < 10; i++) {
+			SpawnRoom (i);
+		}*/
 	}
 
-	void ArrayRandom(GameObject[] array) {
+	void SpawnRoom (int num) {
+		if (num != 0) {
+			childA = horizontalLevels[num - 1].gameObject.transform.FindChild("BindPointExit").gameObject;
+		}
+
+		horizontalLevels[num] = (GameObject)Instantiate(horizontalPrefabs[num], Vector3.zero, Quaternion.identity);
+		horizontalLevels[num].transform.Rotate(new Vector3(90,90,0));
+
+		childB = horizontalLevels[num].gameObject.transform.FindChild("BindPointEntry").gameObject;
+		horizontalLevels[num].name = "Map" + (num + 1);
+
+		Vector3 offset = childA.transform.position - childB.transform.position;
+		horizontalLevels[num].transform.position += offset;
+	}
+
+	void EnterRoom (string roomName) {
+		int roomNum;
+		roomNum = int.Parse(roomName.Substring (roomName.Length - 1, 1));
+
+		GameObject block = (GameObject)Instantiate(doorBlock, horizontalLevels[roomNum - 1].gameObject.transform.FindChild("BindPointEntry").position, Quaternion.identity);
+		block.transform.Rotate(new Vector3(90,90,0));
+		block.transform.SetParent (horizontalLevels [roomNum - 1].transform);
+
+		respawnPoint = horizontalLevels[roomNum - 1].transform.Find("SpawnPoint").position;
+
+		if (roomNum == 1) {
+			startLevel.SetActive (false);
+		}
+		else {
+			horizontalLevels[roomNum - 2].SetActive (false);
+		}
+	}
+
+	GameObject[] ArrayRandom(GameObject[] array) {
 		for (int i = 0; i < array.Length; i++ )
 		{
 			GameObject tmp = array[i];
@@ -153,8 +96,7 @@ public class RandomizeMap : MonoBehaviour
 			array[i] = array[r];
 			array[r] = tmp;
 		}
-		prefabss = array;
-		print ("Array Randomized");
+		return array;
 	}
 
 	void CreatePlayer()
@@ -170,9 +112,14 @@ public class RandomizeMap : MonoBehaviour
 			RandomizeLevel();
 		}
 
-		if (player.transform.position.y < -30) {
+		if (player.transform.position.y < -35) {
 			player.GetComponent<Rigidbody>().velocity = new Vector3(0,0,0);
 			player.transform.position = respawnPoint;
 		}
+	}
+
+	void Die() {
+		player.GetComponent<Rigidbody>().velocity = new Vector3(0,0,0);
+		player.transform.position = respawnPoint;
 	}
 }

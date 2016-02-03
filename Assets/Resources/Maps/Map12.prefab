@@ -26,7 +26,7 @@ GameObject:
   - 65: {fileID: 6589358}
   - 114: {fileID: 11431358}
   m_Layer: 0
-  m_Name: Map8
+  m_Name: Map12
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,7 +44,7 @@ GameObject:
   - 23: {fileID: 2366486}
   - 64: {fileID: 6431228}
   m_Layer: 0
-  m_Name: Map8
+  m_Name: Map12
   m_TagString: wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -253,7 +253,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_Name
-      value: Map8
+      value: Map12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
