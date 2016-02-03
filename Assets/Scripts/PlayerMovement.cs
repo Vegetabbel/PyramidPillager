@@ -73,8 +73,10 @@ public class PlayerMovement : MonoBehaviour {
     public Sprite catSprite;
     public Sprite ghostSprite;
 
-    private float formGaugeCurrentValue = 1;
-    public float formGaugeMaxValue;
+    private float formGaugeCurrentValue;
+    public float formGaugeDecreaseValue = 20;
+    public float formGaugeFillValue = 10;
+    public float formGaugeMaxValue = 100;
 
     //Isis values
     public IsisValues isisValues = new IsisValues();
@@ -105,11 +107,14 @@ public class PlayerMovement : MonoBehaviour {
     private Transform tr;
     private BoxCollider bc;
     private SpriteRenderer sr;
+
+    public GameObject formGauge;
+    private SpriteRenderer formGaugeSR;
+
     public GameObject bottomLeftCorner;
     public GameObject bottomRightCorner;
     public GameObject catBottomLeftCorner;
     public GameObject catBottomRightCorner;
-
 
 
     void Start ()
@@ -120,196 +125,216 @@ public class PlayerMovement : MonoBehaviour {
         sr = GetComponent<SpriteRenderer>();
         maxMoveSpeedActive = isisValues.maxMoveSpeedNormal;
         playerForm = PlayerForm.Isis;
+        formGaugeCurrentValue = formGaugeMaxValue;
+        formGaugeSR = formGauge.GetComponent<SpriteRenderer>();
     }
 
     void Update()
     {
-        //Debug.Log();
-
         //Death
         if (!isAlive)
         {
-            Destroy(gameObject);
+            sr.color = new Color(255, 0, 170);
+            rb.velocity.Set(0, 0, 0);
+            rb.isKinematic = true;
         }
-
-        //Transformations
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        else
         {
-            playerForm = PlayerForm.Isis;
-        }
-        if (formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.Space) && Input.GetKey(KeyCode.Mouse0))
-        {
-            playerForm = PlayerForm.Hawk;
-        }
-        if (formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.Mouse0)
-            || formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.Mouse0))
-        {
-            playerForm = PlayerForm.Cat;
-        }
-        if (formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.Mouse0))
-        {
-            playerForm = PlayerForm.Ghost;
-        }
+            //Form gauge
+            if (formGaugeCurrentValue > 0 && playerForm != PlayerForm.Isis)
+            {
+                formGaugeCurrentValue -= formGaugeDecreaseValue * Time.deltaTime;
+            }
+            else
+            {
+                formGaugeCurrentValue += formGaugeFillValue * Time.deltaTime;
+            }
 
-        //Change controls based on active form
-        switch (playerForm)
-        {
-            case PlayerForm.Isis:
-                #region
+            if (formGaugeCurrentValue <= 0)
+            {
+                isAlive = false;
+            }
 
-                bc.size = new Vector3(1f, 1.8f, 1f);
-                rb.useGravity = true;
-                sr.sprite = isisSprite;
+            formGaugeSR.color = new Color(0.0f, 0.0f, formGaugeCurrentValue * 0.01f);
 
-                //Check if player is standing on something
-                if (Physics.Raycast(bottomLeftCorner.transform.position, -Vector3.up, 0.2f) ||
-                    Physics.Raycast(bottomRightCorner.transform.position, -Vector3.up, 0.2f))
-                {
-                    isGrounded = true;
-                }
-                else
-                {
-                    isGrounded = false;
-                }
+            //Transformations
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                playerForm = PlayerForm.Isis;
+            }
+            if (formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.Space) && Input.GetKey(KeyCode.Mouse0))
+            {
+                playerForm = PlayerForm.Hawk;
+            }
+            if (formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.Mouse0)
+                || formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.Mouse0))
+            {
+                playerForm = PlayerForm.Cat;
+            }
+            if (formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.Mouse0))
+            {
+                playerForm = PlayerForm.Ghost;
+            }
 
-                //Sprinting
-                if (Input.GetKey(KeyCode.LeftShift) || !isGrounded)
-                {
-                    maxMoveSpeedActive = isisValues.maxMoveSpeedSprint;
-                }
-                else
-                {
-                    maxMoveSpeedActive = isisValues.maxMoveSpeedNormal;
-                }
-                if (Input.GetKey(KeyCode.LeftShift) && isGrounded)
-                {
-                    accelerationSpeedActive = isisValues.accelerationSpeedSprint;
-                }
-                else
-                {
-                    accelerationSpeedActive = isisValues.maxMoveSpeedNormal;
-                }
+            //Change controls based on active form
+            switch (playerForm)
+            {
+                case PlayerForm.Isis:
+                    #region
 
-                //Set movement speed in air
-                if (!isGrounded)
-                {
-                    accelerationSpeedActive = isisValues.accelerationSpeedAir;
-                }
-                else
-                {
-                    accelerationSpeedActive = isisValues.accelerationSpeedNormal;
-                }
+                    bc.size = new Vector3(1f, 1.8f, 1f);
+                    rb.useGravity = true;
+                    sr.sprite = isisSprite;
 
-                //Move left
-                if (Input.GetKey(KeyCode.A))
-                {
-                    rb.AddForce(-accelerationSpeedActive, 0, 0);
-                }
-                //Move right
-                if (Input.GetKey(KeyCode.D))
-                {
-                    rb.AddForce(accelerationSpeedActive, 0, 0);
-                }
-                //Friction / stopping
-                if (isGrounded)
-                {
-                    if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+                    //Check if player is standing on something
+                    if (Physics.Raycast(bottomLeftCorner.transform.position, -Vector3.up, 0.2f) ||
+                        Physics.Raycast(bottomRightCorner.transform.position, -Vector3.up, 0.2f))
                     {
-                        if (rb.velocity.x < isisValues.minMoveSpeed)
+                        isGrounded = true;
+                    }
+                    else
+                    {
+                        isGrounded = false;
+                    }
+
+                    //Sprinting
+                    if (Input.GetKey(KeyCode.LeftShift) || !isGrounded)
+                    {
+                        maxMoveSpeedActive = isisValues.maxMoveSpeedSprint;
+                    }
+                    else
+                    {
+                        maxMoveSpeedActive = isisValues.maxMoveSpeedNormal;
+                    }
+                    if (Input.GetKey(KeyCode.LeftShift) && isGrounded)
+                    {
+                        accelerationSpeedActive = isisValues.accelerationSpeedSprint;
+                    }
+                    else
+                    {
+                        accelerationSpeedActive = isisValues.maxMoveSpeedNormal;
+                    }
+
+                    //Set movement speed in air
+                    if (!isGrounded)
+                    {
+                        accelerationSpeedActive = isisValues.accelerationSpeedAir;
+                    }
+                    else
+                    {
+                        accelerationSpeedActive = isisValues.accelerationSpeedNormal;
+                    }
+
+                    //Move left
+                    if (Input.GetKey(KeyCode.A))
+                    {
+                        rb.AddForce(-accelerationSpeedActive, 0, 0);
+                    }
+                    //Move right
+                    if (Input.GetKey(KeyCode.D))
+                    {
+                        rb.AddForce(accelerationSpeedActive, 0, 0);
+                    }
+                    //Friction / stopping
+                    if (isGrounded)
+                    {
+                        if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
                         {
-                            rb.velocity = new Vector3(rb.velocity.x + isisValues.slowingSpeed, rb.velocity.y, 0f);
-                        }
-                        else if (rb.velocity.x > isisValues.minMoveSpeed)
-                        {
-                            rb.velocity = new Vector3(rb.velocity.x - isisValues.slowingSpeed, rb.velocity.y, 0);
-                        }
-                        if ((rb.velocity.x <= isisValues.minMoveSpeed && rb.velocity.x >= 0) || (rb.velocity.x >= isisValues.minMoveSpeed && rb.velocity.x <= 0))
-                        {
-                            rb.velocity = new Vector3(0, rb.velocity.y, 0f);
+                            if (rb.velocity.x < isisValues.minMoveSpeed)
+                            {
+                                rb.velocity = new Vector3(rb.velocity.x + isisValues.slowingSpeed, rb.velocity.y, 0f);
+                            }
+                            else if (rb.velocity.x > isisValues.minMoveSpeed)
+                            {
+                                rb.velocity = new Vector3(rb.velocity.x - isisValues.slowingSpeed, rb.velocity.y, 0);
+                            }
+                            if ((rb.velocity.x <= isisValues.minMoveSpeed && rb.velocity.x >= 0) || (rb.velocity.x >= isisValues.minMoveSpeed && rb.velocity.x <= 0))
+                            {
+                                rb.velocity = new Vector3(0, rb.velocity.y, 0f);
+                            }
                         }
                     }
-                }
-                //Jump
-                if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
-                {
-                    jumpHoldTime = 0;
-                    ableToJump = true;
-                    //Debug.Log("Jump check" + Time.timeSinceLevelLoad);
-                }
-                if (Input.GetKey(KeyCode.Space) && ableToJump)
-                {
-                    //Debug.Log("Jump hold" + Time.timeSinceLevelLoad);
-
-                    jumpHoldTime += 10 * Time.deltaTime;
-
-                    if (jumpHoldTime <= isisValues.jumpHoldTimeMax)
-                    {
-                        rb.velocity = new Vector3(rb.velocity.x, isisValues.jumpForce, 0);
-                    }
-                    else if (jumpHoldTime > isisValues.jumpHoldTimeMax)
+                    //Jump
+                    if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
                     {
                         jumpHoldTime = 0;
+                        ableToJump = true;
+                        //Debug.Log("Jump check" + Time.timeSinceLevelLoad);
+                    }
+                    if (Input.GetKey(KeyCode.Space) && ableToJump)
+                    {
+                        //Debug.Log("Jump hold" + Time.timeSinceLevelLoad);
+
+                        jumpHoldTime += 10 * Time.deltaTime;
+
+                        if (jumpHoldTime <= isisValues.jumpHoldTimeMax)
+                        {
+                            rb.velocity = new Vector3(rb.velocity.x, isisValues.jumpForce, 0);
+                        }
+                        else if (jumpHoldTime > isisValues.jumpHoldTimeMax)
+                        {
+                            jumpHoldTime = 0;
+                            ableToJump = false;
+                        }
+                    }
+                    if (Input.GetKeyUp(KeyCode.Space))
+                    {
                         ableToJump = false;
+                        jumpHoldTime = 0;
+                        //Debug.Log("Jump release" + Time.timeSinceLevelLoad);
                     }
-                }
-                if (Input.GetKeyUp(KeyCode.Space))
-                {
-                    ableToJump = false;
-                    jumpHoldTime = 0;
-                    //Debug.Log("Jump release" + Time.timeSinceLevelLoad);
-                }
 
-                //Wall jump
-                else
-                {
-                    if (isTouchingLeftWall && !isGrounded)
+                    //Wall jump
+                    else
                     {
-                        if (Input.GetKeyDown(KeyCode.Space))
+                        if (isTouchingLeftWall && !isGrounded)
                         {
-                            rb.AddForce(isisValues.wallJumpForceHoriz, isisValues.wallJumpForceVerti, 0);
+                            if (Input.GetKeyDown(KeyCode.Space))
+                            {
+                                rb.AddForce(isisValues.wallJumpForceHoriz, isisValues.wallJumpForceVerti, 0);
+                            }
+                        }
+                        if (isTouchingRightWall && !isGrounded)
+                        {
+                            if (Input.GetKeyDown(KeyCode.Space))
+                            {
+                                rb.AddForce(-1 * isisValues.wallJumpForceHoriz, isisValues.wallJumpForceVerti, 0);
+                            }
                         }
                     }
-                    if (isTouchingRightWall && !isGrounded)
+
+                    //Restrict maximum movement speed
+                    rb.velocity = new Vector3(Mathf.Clamp(rb.velocity.x, -maxMoveSpeedActive, maxMoveSpeedActive), rb.velocity.y, 0f);
+                    break;
+                #endregion
+                case PlayerForm.Hawk:
+                    #region
+                    bc.size = new Vector3(1f, 1f, 1f);
+                    rb.useGravity = false;
+                    sr.sprite = hawkSprite;
+
+                    //Move left
+                    if (Input.GetKey(KeyCode.A))
                     {
-                        if (Input.GetKeyDown(KeyCode.Space))
-                        {
-                            rb.AddForce(-1 * isisValues.wallJumpForceHoriz, isisValues.wallJumpForceVerti, 0);
-                        }
+                        rb.AddForce(-hawkValues.moveSpeedHor, 0f, 0f);
                     }
-                }
-
-                //Restrict maximum movement speed
-                rb.velocity = new Vector3(Mathf.Clamp(rb.velocity.x, -maxMoveSpeedActive, maxMoveSpeedActive), rb.velocity.y, 0f);
-                break;
-            #endregion
-            case PlayerForm.Hawk:
-                #region
-                bc.size = new Vector3(1f, 1f, 1f);
-                rb.useGravity = false;
-                sr.sprite = hawkSprite;
-
-                //Move left
-                if (Input.GetKey(KeyCode.A))
-                {
-                    rb.AddForce(-hawkValues.moveSpeedHor, 0f, 0f);
-                }
-                //Move right
-                if (Input.GetKey(KeyCode.D))
-                {
-                    rb.AddForce(hawkValues.moveSpeedHor, 0f, 0f);
-                }
-                //Move up
-                if (Input.GetKey(KeyCode.W))
-                {
-                    rb.AddForce(0f, hawkValues.moveSpeedVer, 0f);
-                }
-                //Move down
-                if (Input.GetKey(KeyCode.S))
-                {
-                    rb.AddForce(0f, -hawkValues.moveSpeedVer, 0f);
-                }
-                //Stopping horizontal
-                if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+                    //Move right
+                    if (Input.GetKey(KeyCode.D))
+                    {
+                        rb.AddForce(hawkValues.moveSpeedHor, 0f, 0f);
+                    }
+                    //Move up
+                    if (Input.GetKey(KeyCode.W))
+                    {
+                        rb.AddForce(0f, hawkValues.moveSpeedVer, 0f);
+                    }
+                    //Move down
+                    if (Input.GetKey(KeyCode.S))
+                    {
+                        rb.AddForce(0f, -hawkValues.moveSpeedVer, 0f);
+                    }
+                    //Stopping horizontal
+                    if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
                     {
                         if (rb.velocity.x < hawkValues.minMoveSpeedHor)
                         {
@@ -324,190 +349,190 @@ public class PlayerMovement : MonoBehaviour {
                             rb.velocity = new Vector3(0, rb.velocity.y, 0f);
                         }
                     }
-                //Stopping vertical
-                if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S))
-                {
-                    if (rb.velocity.y < hawkValues.minMoveSpeedVer)
+                    //Stopping vertical
+                    if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S))
                     {
-                        rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y + hawkValues.slowingSpeedVer, 0f);
-                    }
-                    else if (rb.velocity.y > hawkValues.minMoveSpeedVer)
-                    {
-                        rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y - hawkValues.slowingSpeedVer, 0f);
-                    }
-                    if ((rb.velocity.y <= hawkValues.minMoveSpeedVer && rb.velocity.y >= 0) || (rb.velocity.y >= hawkValues.minMoveSpeedVer && rb.velocity.y <= 0))
-                    {
-                        rb.velocity = new Vector3(rb.velocity.x, 0f, 0f);
-                    }
-                }
-
-                //Restrict move speed to max
-                rb.velocity = new Vector3(Mathf.Clamp(  rb.velocity.x, -hawkValues.moveSpeedHorMax, hawkValues.moveSpeedHorMax),
-                                          Mathf.Clamp(  rb.velocity.y, -hawkValues.moveSpeedVerMax, hawkValues.moveSpeedVerMax),
-                                                        0f);
-
-                break;
-            #endregion
-            case PlayerForm.Cat:
-                #region
-                bc.size = new Vector3(1.5f, 1f, 1f);
-                rb.useGravity = true;
-                sr.sprite = catSprite;
-
-                //Check if player is standing on something
-                if (Physics.Raycast(catBottomLeftCorner.transform.position, -Vector3.up, 0.2f) ||
-                    Physics.Raycast(catBottomRightCorner.transform.position, -Vector3.up, 0.2f))
-                {
-                    isGrounded = true;
-                }
-                else
-                {
-                    isGrounded = false;
-                }
-
-                //Set movement speed in air
-                if (!isGrounded)
-                {
-                    catAccelerationSpeedActive = catValues.accelerationSpeedAir;
-                }
-                else
-                {
-                    catAccelerationSpeedActive = catValues.accelerationSpeedNormal;
-                }
-
-                //Move left
-                if (Input.GetKey(KeyCode.A))
-                {
-                    rb.AddForce(-catAccelerationSpeedActive, 0, 0);
-                }
-                //Move right
-                if (Input.GetKey(KeyCode.D))
-                {
-                    rb.AddForce(catAccelerationSpeedActive, 0, 0);
-                }
-                //Friction / stopping
-                if (isGrounded)
-                {
-                    if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
-                    {
-                        if (rb.velocity.x < catValues.minMoveSpeed)
+                        if (rb.velocity.y < hawkValues.minMoveSpeedVer)
                         {
-                            rb.velocity = new Vector3(rb.velocity.x + catValues.slowingSpeed, rb.velocity.y, 0f);
+                            rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y + hawkValues.slowingSpeedVer, 0f);
                         }
-                        else if (rb.velocity.x > catValues.minMoveSpeed)
+                        else if (rb.velocity.y > hawkValues.minMoveSpeedVer)
                         {
-                            rb.velocity = new Vector3(rb.velocity.x - catValues.slowingSpeed, rb.velocity.y, 0);
+                            rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y - hawkValues.slowingSpeedVer, 0f);
                         }
-                        if ((rb.velocity.x <= catValues.minMoveSpeed && rb.velocity.x >= 0) || (rb.velocity.x >= catValues.minMoveSpeed && rb.velocity.x <= 0))
+                        if ((rb.velocity.y <= hawkValues.minMoveSpeedVer && rb.velocity.y >= 0) || (rb.velocity.y >= hawkValues.minMoveSpeedVer && rb.velocity.y <= 0))
                         {
-                            rb.velocity = new Vector3(0, rb.velocity.y, 0f);
+                            rb.velocity = new Vector3(rb.velocity.x, 0f, 0f);
                         }
                     }
-                }
-                //Jump
-                if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
-                {
-                    catJumpHoldTime = 0;
-                    ableToJump = true;
-                    //Debug.Log("Jump check" + Time.timeSinceLevelLoad);
-                }
-                if (Input.GetKey(KeyCode.Space) && ableToJump)
-                {
-                    //Debug.Log("Jump hold" + Time.timeSinceLevelLoad);
 
-                    catJumpHoldTime += 10 * Time.deltaTime;
+                    //Restrict move speed to max
+                    rb.velocity = new Vector3(Mathf.Clamp(rb.velocity.x, -hawkValues.moveSpeedHorMax, hawkValues.moveSpeedHorMax),
+                                              Mathf.Clamp(rb.velocity.y, -hawkValues.moveSpeedVerMax, hawkValues.moveSpeedVerMax),
+                                                            0f);
 
-                    if (catJumpHoldTime <= catValues.jumpHoldTimeMax)
+                    break;
+                #endregion
+                case PlayerForm.Cat:
+                    #region
+                    bc.size = new Vector3(1.5f, 1f, 1f);
+                    rb.useGravity = true;
+                    sr.sprite = catSprite;
+
+                    //Check if player is standing on something
+                    if (Physics.Raycast(catBottomLeftCorner.transform.position, -Vector3.up, 0.2f) ||
+                        Physics.Raycast(catBottomRightCorner.transform.position, -Vector3.up, 0.2f))
                     {
-                        rb.velocity = new Vector3(rb.velocity.x, catValues.jumpForce, 0);
+                        isGrounded = true;
                     }
-                    else if (catJumpHoldTime > catValues.jumpHoldTimeMax)
+                    else
+                    {
+                        isGrounded = false;
+                    }
+
+                    //Set movement speed in air
+                    if (!isGrounded)
+                    {
+                        catAccelerationSpeedActive = catValues.accelerationSpeedAir;
+                    }
+                    else
+                    {
+                        catAccelerationSpeedActive = catValues.accelerationSpeedNormal;
+                    }
+
+                    //Move left
+                    if (Input.GetKey(KeyCode.A))
+                    {
+                        rb.AddForce(-catAccelerationSpeedActive, 0, 0);
+                    }
+                    //Move right
+                    if (Input.GetKey(KeyCode.D))
+                    {
+                        rb.AddForce(catAccelerationSpeedActive, 0, 0);
+                    }
+                    //Friction / stopping
+                    if (isGrounded)
+                    {
+                        if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+                        {
+                            if (rb.velocity.x < catValues.minMoveSpeed)
+                            {
+                                rb.velocity = new Vector3(rb.velocity.x + catValues.slowingSpeed, rb.velocity.y, 0f);
+                            }
+                            else if (rb.velocity.x > catValues.minMoveSpeed)
+                            {
+                                rb.velocity = new Vector3(rb.velocity.x - catValues.slowingSpeed, rb.velocity.y, 0);
+                            }
+                            if ((rb.velocity.x <= catValues.minMoveSpeed && rb.velocity.x >= 0) || (rb.velocity.x >= catValues.minMoveSpeed && rb.velocity.x <= 0))
+                            {
+                                rb.velocity = new Vector3(0, rb.velocity.y, 0f);
+                            }
+                        }
+                    }
+                    //Jump
+                    if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
                     {
                         catJumpHoldTime = 0;
-                        ableToJump = false;
+                        ableToJump = true;
+                        //Debug.Log("Jump check" + Time.timeSinceLevelLoad);
                     }
-                }
-                if (Input.GetKeyUp(KeyCode.Space))
-                {
-                    ableToJump = false;
-                    catJumpHoldTime = 0;
-                    //Debug.Log("Jump release" + Time.timeSinceLevelLoad);
-                }
-
-                //Restrict maximum movement speed
-                rb.velocity = new Vector3(Mathf.Clamp(rb.velocity.x, -catValues.maxMoveSpeed, catValues.maxMoveSpeed), rb.velocity.y, 0f);
-
-                break;
-            #endregion
-            case PlayerForm.Ghost:
-                #region
-                bc.size = new Vector3(1f, 1.8f, 1f);
-                rb.useGravity = false;
-                sr.sprite = ghostSprite;
-
-                //Lower gravity
-                rb.AddForce(-Vector3.up * ghostValues.gravityPercentage * Physics.gravity.magnitude);
-
-                //Check if player is standing on something
-                if (Physics.Raycast(bottomLeftCorner.transform.position, -Vector3.up, 0.2f) ||
-                    Physics.Raycast(bottomRightCorner.transform.position, -Vector3.up, 0.2f))
-                {
-                    isGrounded = true;
-                }
-                else
-                {
-                    isGrounded = false;
-                }
-
-                //Set movement speed in air
-                if (!isGrounded)
-                {
-                    ghostAccelerationSpeedActive = ghostValues.accelerationSpeedAir;
-                }
-                else
-                {
-                    ghostAccelerationSpeedActive = ghostValues.accelerationSpeedNormal;
-                }
-
-                //Move left
-                if (Input.GetKey(KeyCode.A))
-                {
-                    rb.AddForce(-ghostAccelerationSpeedActive, 0, 0);
-                }
-                //Move right
-                if (Input.GetKey(KeyCode.D))
-                {
-                    rb.AddForce(ghostAccelerationSpeedActive, 0, 0);
-                }
-                //Friction / stopping
-                if (isGrounded)
-                {
-                    if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+                    if (Input.GetKey(KeyCode.Space) && ableToJump)
                     {
-                        if (rb.velocity.x < isisValues.minMoveSpeed)
+                        //Debug.Log("Jump hold" + Time.timeSinceLevelLoad);
+
+                        catJumpHoldTime += 10 * Time.deltaTime;
+
+                        if (catJumpHoldTime <= catValues.jumpHoldTimeMax)
                         {
-                            rb.velocity = new Vector3(rb.velocity.x + isisValues.slowingSpeed, rb.velocity.y, 0f);
+                            rb.velocity = new Vector3(rb.velocity.x, catValues.jumpForce, 0);
                         }
-                        else if (rb.velocity.x > isisValues.minMoveSpeed)
+                        else if (catJumpHoldTime > catValues.jumpHoldTimeMax)
                         {
-                            rb.velocity = new Vector3(rb.velocity.x - isisValues.slowingSpeed, rb.velocity.y, 0);
-                        }
-                        if ((rb.velocity.x <= isisValues.minMoveSpeed && rb.velocity.x >= 0) || (rb.velocity.x >= isisValues.minMoveSpeed && rb.velocity.x <= 0))
-                        {
-                            rb.velocity = new Vector3(0, rb.velocity.y, 0f);
+                            catJumpHoldTime = 0;
+                            ableToJump = false;
                         }
                     }
-                }
-                //Restrict maximum movement speed
-                rb.velocity = new Vector3(Mathf.Clamp(rb.velocity.x, -ghostValues.maxMoveSpeedNormal, ghostValues.maxMoveSpeedNormal), rb.velocity.y, 0f);
+                    if (Input.GetKeyUp(KeyCode.Space))
+                    {
+                        ableToJump = false;
+                        catJumpHoldTime = 0;
+                        //Debug.Log("Jump release" + Time.timeSinceLevelLoad);
+                    }
 
-                break;
-            #endregion
-            default:
-                Debug.Log("No form selected");
-                break;
+                    //Restrict maximum movement speed
+                    rb.velocity = new Vector3(Mathf.Clamp(rb.velocity.x, -catValues.maxMoveSpeed, catValues.maxMoveSpeed), rb.velocity.y, 0f);
+
+                    break;
+                #endregion
+                case PlayerForm.Ghost:
+                    #region
+                    bc.size = new Vector3(1f, 1.8f, 1f);
+                    rb.useGravity = false;
+                    sr.sprite = ghostSprite;
+
+                    //Lower gravity
+                    rb.AddForce(-Vector3.up * ghostValues.gravityPercentage * Physics.gravity.magnitude);
+
+                    //Check if player is standing on something
+                    if (Physics.Raycast(bottomLeftCorner.transform.position, -Vector3.up, 0.2f) ||
+                        Physics.Raycast(bottomRightCorner.transform.position, -Vector3.up, 0.2f))
+                    {
+                        isGrounded = true;
+                    }
+                    else
+                    {
+                        isGrounded = false;
+                    }
+
+                    //Set movement speed in air
+                    if (!isGrounded)
+                    {
+                        ghostAccelerationSpeedActive = ghostValues.accelerationSpeedAir;
+                    }
+                    else
+                    {
+                        ghostAccelerationSpeedActive = ghostValues.accelerationSpeedNormal;
+                    }
+
+                    //Move left
+                    if (Input.GetKey(KeyCode.A))
+                    {
+                        rb.AddForce(-ghostAccelerationSpeedActive, 0, 0);
+                    }
+                    //Move right
+                    if (Input.GetKey(KeyCode.D))
+                    {
+                        rb.AddForce(ghostAccelerationSpeedActive, 0, 0);
+                    }
+                    //Friction / stopping
+                    if (isGrounded)
+                    {
+                        if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+                        {
+                            if (rb.velocity.x < isisValues.minMoveSpeed)
+                            {
+                                rb.velocity = new Vector3(rb.velocity.x + isisValues.slowingSpeed, rb.velocity.y, 0f);
+                            }
+                            else if (rb.velocity.x > isisValues.minMoveSpeed)
+                            {
+                                rb.velocity = new Vector3(rb.velocity.x - isisValues.slowingSpeed, rb.velocity.y, 0);
+                            }
+                            if ((rb.velocity.x <= isisValues.minMoveSpeed && rb.velocity.x >= 0) || (rb.velocity.x >= isisValues.minMoveSpeed && rb.velocity.x <= 0))
+                            {
+                                rb.velocity = new Vector3(0, rb.velocity.y, 0f);
+                            }
+                        }
+                    }
+                    //Restrict maximum movement speed
+                    rb.velocity = new Vector3(Mathf.Clamp(rb.velocity.x, -ghostValues.maxMoveSpeedNormal, ghostValues.maxMoveSpeedNormal), rb.velocity.y, 0f);
+
+                    break;
+                #endregion
+                default:
+                    Debug.Log("No form selected");
+                    break;
+            }
         }
-        
 
     }
     public bool IsTouchingLeftWall
