@@ -2,7 +2,6 @@
 using System.Collections;
 
 [System.Serializable]
-
 public class IsisValues
 {
     public float accelerationSpeedNormal = 100f;        //Should be around 100f
@@ -22,32 +21,35 @@ public class IsisValues
     public float minMoveSpeed = 2f;                     //Player will stop instantly when x-velocity goes below this (on ground), should be around 2f
 
 }
+[System.Serializable]
 public class HawkValues
 {
-    public float hawkMoveSpeedVer = 150f;
-    public float hawkMoveSpeedVerMax = 12f;
+    public float moveSpeedVer = 150f;
+    public float moveSpeedVerMax = 12f;
 
-    public float hawkMoveSpeedHor = 100f;
-    public float hawkMoveSpeedHorMax = 8f;
+    public float moveSpeedHor = 100f;
+    public float moveSpeedHorMax = 8f;
 
-    public float hawkMinMoveSpeedHor = 2.5f;
-    public float hawkSlowingSpeedHor = 1.2f;
+    public float minMoveSpeedHor = 2.5f;
+    public float slowingSpeedHor = 1.2f;
 
-    public float hawkMinMoveSpeedVer = 2f;
-    public float hawkSlowingSpeedVer = 0.8f;
+    public float minMoveSpeedVer = 2f;
+    public float slowingSpeedVer = 0.8f;
 }
+[System.Serializable]
 public class CatValues
 {
-    public float catAccelerationSpeedNormal = 200f;
-    public float catAccelerationSpeedAir = 80f;
-    public float catMaxMoveSpeed = 20f;
+    public float accelerationSpeedNormal = 200f;
+    public float accelerationSpeedAir = 80f;
+    public float maxMoveSpeed = 20f;
 
-    public float catJumpForce = 8f;
-    public float catJumpHoldTimeMax = 2f;
+    public float jumpForce = 8f;
+    public float jumpHoldTimeMax = 2f;
 
-    public float catSlowingSpeed = 1f;                      //How fast the player slows down on ground
-    public float catMinMoveSpeed = 3.5f;                    //Player will stop instantly when x-velocity goes below this (on ground)
+    public float slowingSpeed = 1f;                      //How fast the player slows down on ground
+    public float minMoveSpeed = 3.5f;                    //Player will stop instantly when x-velocity goes below this (on ground)
 }
+[System.Serializable]
 public class GhostValues
 {
 
@@ -101,8 +103,12 @@ public class PlayerMovement : MonoBehaviour {
     private SpriteRenderer sr;
     public GameObject bottomLeftCorner;
     public GameObject bottomRightCorner;
+    public GameObject catBottomLeftCorner;
+    public GameObject catBottomRightCorner;
 
-	void Start ()
+
+
+    void Start ()
     {
         rb = GetComponent<Rigidbody>();
         tr = GetComponent<Transform>();
@@ -131,7 +137,8 @@ public class PlayerMovement : MonoBehaviour {
         {
             playerForm = PlayerForm.Hawk;
         }
-        if (formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.Mouse0))
+        if (formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.Mouse0)
+            || formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.Mouse0))
         {
             playerForm = PlayerForm.Cat;
         }
@@ -280,35 +287,35 @@ public class PlayerMovement : MonoBehaviour {
                 //Move left
                 if (Input.GetKey(KeyCode.A))
                 {
-                    rb.AddForce(-hawkValues.hawkMoveSpeedHor, 0f, 0f);
+                    rb.AddForce(-hawkValues.moveSpeedHor, 0f, 0f);
                 }
                 //Move right
                 if (Input.GetKey(KeyCode.D))
                 {
-                    rb.AddForce(hawkValues.hawkMoveSpeedHor, 0f, 0f);
+                    rb.AddForce(hawkValues.moveSpeedHor, 0f, 0f);
                 }
                 //Move up
                 if (Input.GetKey(KeyCode.W))
                 {
-                    rb.AddForce(0f, hawkValues.hawkMoveSpeedVer, 0f);
+                    rb.AddForce(0f, hawkValues.moveSpeedVer, 0f);
                 }
                 //Move down
                 if (Input.GetKey(KeyCode.S))
                 {
-                    rb.AddForce(0f, -hawkValues.hawkMoveSpeedVer, 0f);
+                    rb.AddForce(0f, -hawkValues.moveSpeedVer, 0f);
                 }
                 //Stopping horizontal
                 if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
                     {
-                        if (rb.velocity.x < hawkValues.hawkMinMoveSpeedHor)
+                        if (rb.velocity.x < hawkValues.minMoveSpeedHor)
                         {
-                            rb.velocity = new Vector3(rb.velocity.x + hawkValues.hawkSlowingSpeedHor, rb.velocity.y, 0f);
+                            rb.velocity = new Vector3(rb.velocity.x + hawkValues.slowingSpeedHor, rb.velocity.y, 0f);
                         }
-                        else if (rb.velocity.x > hawkValues.hawkMinMoveSpeedHor)
+                        else if (rb.velocity.x > hawkValues.minMoveSpeedHor)
                         {
-                            rb.velocity = new Vector3(rb.velocity.x - hawkValues.hawkSlowingSpeedHor, rb.velocity.y, 0);
+                            rb.velocity = new Vector3(rb.velocity.x - hawkValues.slowingSpeedHor, rb.velocity.y, 0);
                         }
-                        if ((rb.velocity.x <= hawkValues.hawkMinMoveSpeedHor && rb.velocity.x >= 0) || (rb.velocity.x >= hawkValues.hawkMinMoveSpeedHor && rb.velocity.x <= 0))
+                        if ((rb.velocity.x <= hawkValues.minMoveSpeedHor && rb.velocity.x >= 0) || (rb.velocity.x >= hawkValues.minMoveSpeedHor && rb.velocity.x <= 0))
                         {
                             rb.velocity = new Vector3(0, rb.velocity.y, 0f);
                         }
@@ -316,23 +323,23 @@ public class PlayerMovement : MonoBehaviour {
                 //Stopping vertical
                 if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S))
                 {
-                    if (rb.velocity.y < hawkValues.hawkMinMoveSpeedVer)
+                    if (rb.velocity.y < hawkValues.minMoveSpeedVer)
                     {
-                        rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y + hawkValues.hawkSlowingSpeedVer, 0f);
+                        rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y + hawkValues.slowingSpeedVer, 0f);
                     }
-                    else if (rb.velocity.y > hawkValues.hawkMinMoveSpeedVer)
+                    else if (rb.velocity.y > hawkValues.minMoveSpeedVer)
                     {
-                        rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y - hawkValues.hawkSlowingSpeedVer, 0f);
+                        rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y - hawkValues.slowingSpeedVer, 0f);
                     }
-                    if ((rb.velocity.y <= hawkValues.hawkMinMoveSpeedVer && rb.velocity.y >= 0) || (rb.velocity.y >= hawkValues.hawkMinMoveSpeedVer && rb.velocity.y <= 0))
+                    if ((rb.velocity.y <= hawkValues.minMoveSpeedVer && rb.velocity.y >= 0) || (rb.velocity.y >= hawkValues.minMoveSpeedVer && rb.velocity.y <= 0))
                     {
                         rb.velocity = new Vector3(rb.velocity.x, 0f, 0f);
                     }
                 }
 
                 //Restrict move speed to max
-                rb.velocity = new Vector3(Mathf.Clamp(  rb.velocity.x, -hawkValues.hawkMoveSpeedHorMax, hawkValues.hawkMoveSpeedHorMax),
-                                          Mathf.Clamp(  rb.velocity.y, -hawkValues.hawkMoveSpeedVerMax, hawkValues.hawkMoveSpeedVerMax),
+                rb.velocity = new Vector3(Mathf.Clamp(  rb.velocity.x, -hawkValues.moveSpeedHorMax, hawkValues.moveSpeedHorMax),
+                                          Mathf.Clamp(  rb.velocity.y, -hawkValues.moveSpeedVerMax, hawkValues.moveSpeedVerMax),
                                                         0f);
 
                 break;
@@ -344,8 +351,8 @@ public class PlayerMovement : MonoBehaviour {
                 sr.sprite = catSprite;
 
                 //Check if player is standing on something
-                if (Physics.Raycast(bottomLeftCorner.transform.position, -Vector3.up, 0.2f) ||
-                    Physics.Raycast(bottomRightCorner.transform.position, -Vector3.up, 0.2f))
+                if (Physics.Raycast(catBottomLeftCorner.transform.position, -Vector3.up, 0.2f) ||
+                    Physics.Raycast(catBottomRightCorner.transform.position, -Vector3.up, 0.2f))
                 {
                     isGrounded = true;
                 }
@@ -357,11 +364,11 @@ public class PlayerMovement : MonoBehaviour {
                 //Set movement speed in air
                 if (!isGrounded)
                 {
-                    catAccelerationSpeedActive = catAccelerationSpeedAir;
+                    catAccelerationSpeedActive = catValues.accelerationSpeedAir;
                 }
                 else
                 {
-                    catAccelerationSpeedActive = catAccelerationSpeedNormal;
+                    catAccelerationSpeedActive = catValues.accelerationSpeedNormal;
                 }
 
                 //Move left
@@ -379,15 +386,15 @@ public class PlayerMovement : MonoBehaviour {
                 {
                     if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
                     {
-                        if (rb.velocity.x < catMinMoveSpeed)
+                        if (rb.velocity.x < catValues.minMoveSpeed)
                         {
-                            rb.velocity = new Vector3(rb.velocity.x + catSlowingSpeed, rb.velocity.y, 0f);
+                            rb.velocity = new Vector3(rb.velocity.x + catValues.slowingSpeed, rb.velocity.y, 0f);
                         }
-                        else if (rb.velocity.x > catMinMoveSpeed)
+                        else if (rb.velocity.x > catValues.minMoveSpeed)
                         {
-                            rb.velocity = new Vector3(rb.velocity.x - catSlowingSpeed, rb.velocity.y, 0);
+                            rb.velocity = new Vector3(rb.velocity.x - catValues.slowingSpeed, rb.velocity.y, 0);
                         }
-                        if ((rb.velocity.x <= catMinMoveSpeed && rb.velocity.x >= 0) || (rb.velocity.x >= catMinMoveSpeed && rb.velocity.x <= 0))
+                        if ((rb.velocity.x <= catValues.minMoveSpeed && rb.velocity.x >= 0) || (rb.velocity.x >= catValues.minMoveSpeed && rb.velocity.x <= 0))
                         {
                             rb.velocity = new Vector3(0, rb.velocity.y, 0f);
                         }
@@ -406,11 +413,11 @@ public class PlayerMovement : MonoBehaviour {
 
                     catJumpHoldTime += 10 * Time.deltaTime;
 
-                    if (catJumpHoldTime <= catJumpHoldTimeMax)
+                    if (catJumpHoldTime <= catValues.jumpHoldTimeMax)
                     {
-                        rb.velocity = new Vector3(rb.velocity.x, catJumpForce, 0);
+                        rb.velocity = new Vector3(rb.velocity.x, catValues.jumpForce, 0);
                     }
-                    else if (catJumpHoldTime > catJumpHoldTimeMax)
+                    else if (catJumpHoldTime > catValues.jumpHoldTimeMax)
                     {
                         catJumpHoldTime = 0;
                         ableToJump = false;
@@ -424,7 +431,7 @@ public class PlayerMovement : MonoBehaviour {
                 }
 
                 //Restrict maximum movement speed
-                rb.velocity = new Vector3(Mathf.Clamp(rb.velocity.x, -catMaxMoveSpeed, catMaxMoveSpeed), rb.velocity.y, 0f);
+                rb.velocity = new Vector3(Mathf.Clamp(rb.velocity.x, -catValues.maxMoveSpeed, catValues.maxMoveSpeed), rb.velocity.y, 0f);
 
                 break;
             #endregion
