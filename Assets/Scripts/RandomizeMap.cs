@@ -8,6 +8,8 @@ public class RandomizeMap : MonoBehaviour
 	/// </summary>
 	public GameObject doorBlock;
 	public GameObject startRoom;
+	public GameObject middleRoom;
+	public GameObject endRoom;
 	public GameObject playerPrefab;
 	private GameObject player;
 
@@ -43,26 +45,35 @@ public class RandomizeMap : MonoBehaviour
 		for (int i = 0; i < 5; i++) {
 			SpawnRoom (i);
 		}
-
-		//For Middle room!!!!
-		/*
-		middleLevel = (GameObject)Instantiate(startRoom, Vector3.zero, Quaternion.identity);
-		middleLevel.transform.Rotate(new Vector3(90,90,0));
-		respawnPoint = middleLevel.transform.Find ("SpawnPoint").position;
+	
+		//MiddleLevel
+		middleLevel = (GameObject)Instantiate(middleRoom, Vector3.zero, Quaternion.identity);
+		childA = middleLevel.gameObject.transform.FindChild("BindPointEntry").gameObject;
+		childB = horizontalLevels[4].gameObject.transform.FindChild("BindPointExit").gameObject;
+		Vector3 offset = childB.transform.position - childA.transform.position;
+		middleLevel.transform.position += offset;
+		childA = middleLevel.gameObject.transform.FindChild ("BindPointExit").gameObject;
 
 		for (int i = 5; i < 10; i++) {
 			SpawnRoom (i);
-		}*/
+		}
 	}
 
 	void SpawnRoom (int num) {
-		if (num != 0) {
+		if (num != 0 && num != 5) {
 			childA = horizontalLevels[num - 1].gameObject.transform.FindChild("BindPointExit").gameObject;
 		}
 
 		horizontalLevels[num] = (GameObject)Instantiate(horizontalPrefabs[num], Vector3.zero, Quaternion.identity);
-		horizontalLevels[num].transform.Rotate(new Vector3(90,90,0));
 
+		//TEMP!!!
+		if (num < 5) {
+			horizontalLevels[num].transform.Rotate(new Vector3(90,90,0));
+		}
+		else {
+			horizontalLevels[num].transform.Rotate(new Vector3(360,90,0));
+		}
+		
 		childB = horizontalLevels[num].gameObject.transform.FindChild("BindPointEntry").gameObject;
 		horizontalLevels[num].name = "Map" + (num + 1);
 
@@ -75,7 +86,15 @@ public class RandomizeMap : MonoBehaviour
 		roomNum = int.Parse(roomName.Substring (roomName.Length - 1, 1));
 
 		GameObject block = (GameObject)Instantiate(doorBlock, horizontalLevels[roomNum - 1].gameObject.transform.FindChild("BindPointEntry").position, Quaternion.identity);
-		block.transform.Rotate(new Vector3(90,90,0));
+
+		//TEMP
+		if (roomNum > 5) {
+			block.transform.Rotate (new Vector3 (360, 90, 0));
+		} else {
+			block.transform.Rotate (new Vector3 (90, 90, 0));
+		}
+
+
 		block.transform.SetParent (horizontalLevels [roomNum - 1].transform);
 
 		respawnPoint = horizontalLevels[roomNum - 1].transform.Find("SpawnPoint").position;
