@@ -1,12 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FallingSpikes : MonoBehaviour {
+public class FallingSpike : MonoBehaviour
+{
 
     public float fallingSpeed = 5;
     public float detectionRange = 20;
     private bool fallen = false;
     private Rigidbody rb;
+
+    public GameObject triggeredText;
+    public Material triggeredMaterial;
+    private bool triggered;
 
     void Start()
     {
@@ -16,7 +21,7 @@ public class FallingSpikes : MonoBehaviour {
     void OnTriggerEnter()
     {
         rb.isKinematic = true;
-        rb.velocity = new Vector3(0f,0f,0f);
+        rb.velocity = new Vector3(0f, 0f, 0f);
         fallen = true;
     }
     void OnTriggerExit()
@@ -26,7 +31,7 @@ public class FallingSpikes : MonoBehaviour {
         fallen = false;
     }
 
-    void Update ()
+    void Update()
     {
         if (!fallen)
         {
@@ -48,7 +53,12 @@ public class FallingSpikes : MonoBehaviour {
                     rb.isKinematic = false;
                     rb.velocity = new Vector3(0f, -fallingSpeed, 0f);
 
-     
+                    if (!triggered)
+                    {
+                        Instantiate(triggeredText, transform.position, Quaternion.identity);
+                        GetComponent<Renderer>().material = triggeredMaterial;
+                        triggered = true;
+                    }
                 }
             }
             if (Physics.Raycast(new Vector3((transform.position.x + (transform.localScale.x / 2)), transform.position.y, transform.position.z),
@@ -59,8 +69,14 @@ public class FallingSpikes : MonoBehaviour {
                     rb.isKinematic = false;
                     rb.velocity = new Vector3(0f, -fallingSpeed, 0f);
 
+                    if (!triggered)
+                    {
+                        Instantiate(triggeredText, transform.position, Quaternion.identity);
+                        GetComponent<Renderer>().material = triggeredMaterial;
+                        triggered = true;
+                    }
                 }
             }
         }
-	}
+    }
 }
