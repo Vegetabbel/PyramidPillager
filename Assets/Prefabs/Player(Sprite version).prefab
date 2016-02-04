@@ -34,6 +34,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &108864
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 430786}
+  - 212: {fileID: 21264674}
+  m_Layer: 0
+  m_Name: Form gauge
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &111404
 GameObject:
   m_ObjectHideFlags: 0
@@ -153,6 +169,7 @@ Transform:
   - {fileID: 460312}
   - {fileID: 488704}
   - {fileID: 499324}
+  - {fileID: 430786}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!4 &425328
@@ -167,6 +184,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 421352}
   m_RootOrder: 0
+--- !u!4 &430786
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 108864}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.29999995, z: 0}
+  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_Children: []
+  m_Father: {fileID: 421352}
+  m_RootOrder: 7
 --- !u!4 &460312
 Transform:
   m_ObjectHideFlags: 1
@@ -411,6 +440,8 @@ MonoBehaviour:
   hawkSprite: {fileID: 21300000, guid: 9ba3ada5152e2a04e9254784556a8955, type: 3}
   catSprite: {fileID: 21300000, guid: b7c4e127dba59b047863650ee7376773, type: 3}
   ghostSprite: {fileID: 21300000, guid: 2f2e05d74ea8d4545bece018488524bc, type: 3}
+  formGaugeDecreaseValue: 20
+  formGaugeFillValue: 10
   formGaugeMaxValue: 100
   isisValues:
     accelerationSpeedNormal: 100
@@ -446,6 +477,7 @@ MonoBehaviour:
     accelerationSpeedAir: 50
     maxMoveSpeedNormal: 4
     gravityPercentage: .0500000007
+  formGauge: {fileID: 108864}
   bottomLeftCorner: {fileID: 108156}
   bottomRightCorner: {fileID: 135018}
   catBottomLeftCorner: {fileID: 130936}
@@ -469,6 +501,32 @@ Behaviour:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 152462}
   m_Enabled: 1
+--- !u!212 &21264674
+SpriteRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 108864}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000e000000000000000, type: 0}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 0
+  m_ReflectionProbeUsage: 0
+  m_ProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_ImportantGI: 0
+  m_AutoUVMaxDistance: .5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!212 &21265302
 SpriteRenderer:
   m_ObjectHideFlags: 1
