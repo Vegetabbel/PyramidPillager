@@ -158,22 +158,23 @@ public class PlayerMovement : MonoBehaviour {
             formGaugeSR.color = new Color(0.0f, 0.0f, formGaugeCurrentValue * 0.01f);
 
             //Transformations
-            if (Input.GetKeyDown(KeyCode.Mouse0))
-            {
-                playerForm = PlayerForm.Isis;
-            }
-            if (formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.Space) && Input.GetKey(KeyCode.Mouse0))
+            if (playerForm == PlayerForm.Isis && formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.Space) && Input.GetKeyDown(KeyCode.Mouse0))
             {
                 playerForm = PlayerForm.Hawk;
             }
-            if (formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.Mouse0)
-                || formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.Mouse0))
+            else if (playerForm == PlayerForm.Isis && formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.D) && Input.GetKeyDown(KeyCode.Mouse0)
+                || playerForm == PlayerForm.Isis && formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.A) && Input.GetKeyDown(KeyCode.Mouse0))
             {
                 playerForm = PlayerForm.Cat;
             }
-            if (formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.Mouse0))
+            else if (playerForm == PlayerForm.Isis && formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.S) && Input.GetKeyDown(KeyCode.Mouse0))
             {
                 playerForm = PlayerForm.Ghost;
+                rb.velocity = new Vector3(rb.velocity.x, 0f, 0f);
+            }
+            else if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                playerForm = PlayerForm.Isis;
             }
 
             //Change controls based on active form
