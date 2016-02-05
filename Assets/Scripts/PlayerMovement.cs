@@ -122,7 +122,7 @@ public class PlayerMovement : MonoBehaviour {
         rb = GetComponent<Rigidbody>();
         tr = GetComponent<Transform>();
         bc = GetComponent<BoxCollider>();
-        sr = GetComponent<SpriteRenderer>();
+        sr = transform.Find("SpriteRenderer").GetComponent<SpriteRenderer>();
         maxMoveSpeedActive = isisValues.maxMoveSpeedNormal;
         playerForm = PlayerForm.Isis;
         formGaugeCurrentValue = formGaugeMaxValue;
