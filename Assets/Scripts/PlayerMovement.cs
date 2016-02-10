@@ -104,7 +104,6 @@ public class PlayerMovement : MonoBehaviour {
 
 
     private Rigidbody rb;
-    private Transform tr;
     private BoxCollider bc;
     private SpriteRenderer sr;
 
@@ -120,7 +119,6 @@ public class PlayerMovement : MonoBehaviour {
     void Start ()
     {
         rb = GetComponent<Rigidbody>();
-        tr = GetComponent<Transform>();
         bc = GetComponent<BoxCollider>();
         sr = transform.Find("SpriteRenderer").GetComponent<SpriteRenderer>();
         maxMoveSpeedActive = isisValues.maxMoveSpeedNormal;
