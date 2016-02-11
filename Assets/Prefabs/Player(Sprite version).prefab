@@ -168,7 +168,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 182902}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: .0299999993, y: 1.76999998, z: 0}
+  m_LocalPosition: {x: 60, y: 6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 405174}
@@ -395,13 +395,13 @@ MonoBehaviour:
   isisValues:
     accelerationSpeedNormal: 100
     accelerationSpeedSprint: 150
-    accelerationSpeedAir: 10
-    maxMoveSpeedNormal: 8
-    maxMoveSpeedSprint: 16
+    accelerationSpeedAir: 15
+    maxMoveSpeedNormal: 6
+    maxMoveSpeedSprint: 12
     jumpForce: 16
     jumpHoldTimeMax: 2
-    wallJumpForceHoriz: 800
-    wallJumpForceVerti: 600
+    wallJumpForceHoriz: 700
+    wallJumpForceVerti: 1000
     slowingSpeed: .600000024
     minMoveSpeed: 2
   hawkValues:
