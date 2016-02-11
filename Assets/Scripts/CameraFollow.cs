@@ -3,6 +3,8 @@ using System.Collections;
 
 public class CameraFollow : MonoBehaviour
 {
+    public bool showBox = true;
+    public float cameraDistance;
     public GameObject target;
     private Collider tcollider;
     public Vector2 focusAreaSize;
@@ -57,13 +59,16 @@ public class CameraFollow : MonoBehaviour
 
         focusPosition.y = Mathf.SmoothDamp(transform.position.y, focusPosition.y, ref smoothVelocityY, verticalSmoothTime);
         focusPosition += Vector2.right * currentLookAheadX;
-        transform.position = (Vector3)focusPosition + Vector3.forward * -10;
+        transform.position = (Vector3)focusPosition + Vector3.forward * -cameraDistance;
     }
 
     void OnDrawGizmos()
     {
-        Gizmos.color = new Color(1, 0, 0, .5f);
-        Gizmos.DrawCube(focusArea.centre, focusAreaSize);
+        if (showBox)
+        {
+            Gizmos.color = new Color(1, 0, 0, .5f);
+            Gizmos.DrawCube(focusArea.centre, focusAreaSize);
+        }
     }
 
     struct FocusArea
