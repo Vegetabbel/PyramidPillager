@@ -14,8 +14,15 @@ public class ArrowScript : MonoBehaviour {
     {
         if (other.gameObject != parentStatue)
         {
-            arrowIsActive = false;
-            gameObject.SetActive(false);
+            if (other.gameObject.tag == "ignore")
+            {
+                return;
+            }
+            else
+            {
+                arrowIsActive = false;
+                gameObject.SetActive(false);
+            }          
         }        
     }
 

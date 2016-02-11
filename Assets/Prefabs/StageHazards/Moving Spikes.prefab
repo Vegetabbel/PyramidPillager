@@ -44,6 +44,21 @@ GameObject:
   m_Component:
   - 4: {fileID: 419996}
   m_Layer: 0
+  m_Name: Bottom Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &110764
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 431324}
+  m_Layer: 0
   m_Name: Right Point
   m_TagString: Untagged
   m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
@@ -59,6 +74,21 @@ GameObject:
   m_Component:
   - 4: {fileID: 479606}
   m_Layer: 0
+  m_Name: Top Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &167844
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 477658}
+  m_Layer: 0
   m_Name: Left Point
   m_TagString: Untagged
   m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
@@ -72,11 +102,11 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 106462}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 460564}
-  m_RootOrder: 2
+  m_RootOrder: 3
 --- !u!4 &424474
 Transform:
   m_ObjectHideFlags: 1
@@ -89,6 +119,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 460564}
   m_RootOrder: 0
+--- !u!4 &431324
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 110764}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 460564}
+  m_RootOrder: 2
 --- !u!4 &460564
 Transform:
   m_ObjectHideFlags: 1
@@ -96,14 +138,28 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100378}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.5, y: 1.0855725, z: 0}
+  m_LocalPosition: {x: 7.5, y: 1.08557248, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 424474}
-  - {fileID: 479606}
+  - {fileID: 477658}
+  - {fileID: 431324}
   - {fileID: 419996}
+  - {fileID: 479606}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!4 &477658
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 167844}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -3, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 460564}
+  m_RootOrder: 1
 --- !u!4 &479606
 Transform:
   m_ObjectHideFlags: 1
@@ -111,11 +167,11 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 152912}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 460564}
-  m_RootOrder: 1
+  m_RootOrder: 4
 --- !u!23 &2342678
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -134,10 +190,8 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 1
-  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
@@ -183,13 +237,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8ccda99088ce5d4ebbf86cfed46ee97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeedLeft: 2
-  moveSpeedRight: 2
-  stopTimeLeft: 0.5
-  stopTimeRight: 0.5
-  startMovingRight: 0
-  leftPoint: {fileID: 152912}
-  rightPoint: {fileID: 106462}
+  axis: 1
+  horizontalValues:
+    moveSpeedLeft: 40
+    moveSpeedRight: 30
+    stopTimeLeft: 10
+    stopTimeRight: 2
+    startMovingRight: 1
+    leftPoint: {fileID: 167844}
+    rightPoint: {fileID: 110764}
+  verticalValues:
+    moveSpeedUp: 2
+    moveSpeedDown: 40
+    stopTimeTop: 1
+    stopTimeBottom: 1
+    startMovingDown: 1
+    topPoint: {fileID: 152912}
+    bottomPoint: {fileID: 106462}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

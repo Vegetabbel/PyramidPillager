@@ -290,6 +290,7 @@ public class PlayerMovement : MonoBehaviour {
                         {
                             if (Input.GetKeyDown(KeyCode.Space))
                             {
+                                rb.velocity = new Vector3(0, 0, 0);
                                 rb.AddForce(isisValues.wallJumpForceHoriz, isisValues.wallJumpForceVerti, 0);
                             }
                         }
@@ -297,6 +298,7 @@ public class PlayerMovement : MonoBehaviour {
                         {
                             if (Input.GetKeyDown(KeyCode.Space))
                             {
+                                rb.velocity = new Vector3(0, 0, 0);
                                 rb.AddForce(-1 * isisValues.wallJumpForceHoriz, isisValues.wallJumpForceVerti, 0);
                             }
                         }

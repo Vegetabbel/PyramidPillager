@@ -5,7 +5,7 @@ public class objectPool : MonoBehaviour {
 
     public static List<GameObject> arrowPool = new List<GameObject>();
     public GameObject arrow;
-    private int poolSize = 10;
+    private int poolSize = 20;
 
 	void Start ()
     {
@@ -16,4 +16,12 @@ public class objectPool : MonoBehaviour {
             instance.SetActive(false);
         }
 	}
+
+    public GameObject createNewArrow()
+    {
+        GameObject instance = Instantiate(arrow);
+        arrowPool.Add(instance);
+        instance.SetActive(false);
+        return instance;
+    }
 }
