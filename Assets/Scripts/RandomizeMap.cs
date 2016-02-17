@@ -121,7 +121,7 @@ public class RandomizeMap : MonoBehaviour
 	void CreatePlayer()
 	{
 		player = (GameObject)Instantiate(playerPrefab, respawnPoint, Quaternion.identity);
-		Camera.main.GetComponent<CameraFollow>().target = player;
+		//Camera.main.GetComponent<CameraFollow>().target = player;
 	}
 	
 	void Update()

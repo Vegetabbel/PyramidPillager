@@ -44,6 +44,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 452856}
+  - 114: {fileID: 11484408}
   m_Layer: 0
   m_Name: Cameras
   m_TagString: Untagged
@@ -70,7 +71,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 196710}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.6266098, y: 4.05289555, z: 5.54101562}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 426044}
@@ -171,6 +172,25 @@ Behaviour:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 168616}
   m_Enabled: 1
+--- !u!114 &11484408
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 196710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb162dd7db0c3c4488255e0f4498d119, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showBox: 1
+  cameraDistance: 15
+  target: {fileID: 0}
+  focusAreaSize: {x: 2, y: 5}
+  verticalOffset: 0
+  lookAheadDstX: 3
+  lookSmoothTimeX: .200000003
+  verticalSmoothTime: 0
 --- !u!124 &12402354
 Behaviour:
   m_ObjectHideFlags: 1

@@ -6,6 +6,7 @@ public class CameraFollow : MonoBehaviour
     public bool showBox = true;
     public float cameraDistance;
     public GameObject target;
+	bool targetSet = false;
     private Collider tcollider;
     public Vector2 focusAreaSize;
 
@@ -26,8 +27,9 @@ public class CameraFollow : MonoBehaviour
 
     void Start()
     {
-        tcollider = target.GetComponent<Collider>();
-        focusArea = new FocusArea(tcollider.bounds, focusAreaSize);
+		//target = GameObject.FindGameObjectWithTag ("Player");
+        //tcollider = target.GetComponent<Collider>();
+        //focusArea = new FocusArea(tcollider.bounds, focusAreaSize);
     }
 
     void LateUpdate()
@@ -70,6 +72,16 @@ public class CameraFollow : MonoBehaviour
             Gizmos.DrawCube(focusArea.centre, focusAreaSize);
         }
     }
+
+	void Update ()
+	{
+		if (GameObject.FindGameObjectWithTag("Player") != null && targetSet == false) {
+			target = GameObject.FindGameObjectWithTag ("Player");
+			tcollider = target.GetComponent<Collider>();
+			focusArea = new FocusArea(tcollider.bounds, focusAreaSize);
+			targetSet = true;
+		}
+	}
 
     struct FocusArea
     {
