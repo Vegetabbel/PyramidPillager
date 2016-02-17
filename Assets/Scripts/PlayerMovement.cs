@@ -137,7 +137,7 @@ public class PlayerMovement : MonoBehaviour {
             rb.isKinematic = true;
         }
         else
-        {
+        { 
             //Form gauge
             if (formGaugeCurrentValue > 0 && playerForm != PlayerForm.Isis)
             {
