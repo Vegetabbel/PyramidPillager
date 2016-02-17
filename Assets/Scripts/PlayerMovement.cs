@@ -556,4 +556,9 @@ public class PlayerMovement : MonoBehaviour {
         get { return isAlive; }
         set { isAlive = value; }
     }
+    public float FormGaugeCurrentValue
+    {
+        get { return formGaugeCurrentValue; }
+        set { formGaugeCurrentValue = value; }
+    }
 }
