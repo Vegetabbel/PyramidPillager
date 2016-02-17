@@ -160,7 +160,6 @@ MonoBehaviour:
   middleRoom: {fileID: 161908, guid: a1297561190eb1640b3f6cb13c926d31, type: 2}
   endRoom: {fileID: 0}
   playerPrefab: {fileID: 182902, guid: cd235675aed3d8642aa2bd8d0333d098, type: 2}
-  horizontalPrefabs: []
 --- !u!4 &995348571
 Transform:
   m_ObjectHideFlags: 0
@@ -172,7 +171,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
 --- !u!114 &995348572
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,7 +183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f02c7fc378b777d48a726284f727b923, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 152342, guid: fc5da23a8e723d2438085ed700e3aca2, type: 2}
+  playerPrefab: {fileID: 182902, guid: cd235675aed3d8642aa2bd8d0333d098, type: 2}
   levelPrefabs:
     levelPrefabsRightEntry:
     - {fileID: 171928, guid: 49d813a3386368a48bd6a902b2e5886e, type: 2}

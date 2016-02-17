@@ -18,7 +18,7 @@ public class RandomizeMap : MonoBehaviour
 	private GameObject endLevel;
 	private GameObject[] horizontalLevels = new GameObject[15];
 
-	public GameObject[] horizontalPrefabs;
+	private GameObject[] horizontalPrefabs = new GameObject[14];
 	GameObject childA;
 	GameObject childB;
 
@@ -26,10 +26,13 @@ public class RandomizeMap : MonoBehaviour
 
 	void Start()
 	{
-		horizontalPrefabs = Resources.LoadAll<GameObject> ("Maps");
+		//horizontalPrefabs = Resources.LoadAll<GameObject> ("Maps");
+		for (int i = 0; i < 14; i++) {
+			horizontalPrefabs[i] = Resources.Load<GameObject>("Horizontal0");
+		}
 		print (horizontalPrefabs.Length);
 
-		horizontalPrefabs = ArrayRandom (horizontalPrefabs);
+		//horizontalPrefabs = ArrayRandom (horizontalPrefabs);
 		RandomizeLevel();
 		CreatePlayer();
 	}
@@ -67,12 +70,12 @@ public class RandomizeMap : MonoBehaviour
 		horizontalLevels[num] = (GameObject)Instantiate(horizontalPrefabs[num], Vector3.zero, Quaternion.identity);
 
 		//TEMP!!!
-		if (num < 5) {
-			horizontalLevels[num].transform.Rotate(new Vector3(90,90,0));
-		}
-		else {
-			horizontalLevels[num].transform.Rotate(new Vector3(360,90,0));
-		}
+//		if (num < 5) {
+//			horizontalLevels[num].transform.Rotate(new Vector3(90,90,0));
+//		}
+//		else {
+//			horizontalLevels[num].transform.Rotate(new Vector3(360,90,0));
+//		}
 		
 		childB = horizontalLevels[num].gameObject.transform.FindChild("BindPointEntry").gameObject;
 		horizontalLevels[num].name = "Map" + (num + 1);
@@ -131,7 +134,7 @@ public class RandomizeMap : MonoBehaviour
 			RandomizeLevel();
 		}
 
-		if (player.transform.position.y < -35) {
+		if (player.transform.position.y < -30000) {
 			player.GetComponent<Rigidbody>().velocity = new Vector3(0,0,0);
 			player.transform.position = respawnPoint;
 		}
