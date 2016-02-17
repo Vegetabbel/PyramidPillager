@@ -343,6 +343,36 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &124022
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 454312}
+  m_Layer: 0
+  m_Name: SpawnPoint
+  m_TagString: spawn
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &126236
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 428246}
+  m_Layer: 0
+  m_Name: BindPointExit
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &129282
 GameObject:
   m_ObjectHideFlags: 1
@@ -792,6 +822,21 @@ GameObject:
   - 114: {fileID: 11410494}
   m_Layer: 0
   m_Name: Spikes (10)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &168636
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 455018}
+  m_Layer: 0
+  m_Name: BindPointEntry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1273,6 +1318,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 494698}
   m_RootOrder: 9
+--- !u!4 &428246
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 126236}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 31, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 443560}
+  m_RootOrder: 25
 --- !u!4 &428456
 Transform:
   m_ObjectHideFlags: 1
@@ -1430,6 +1487,9 @@ Transform:
   - {fileID: 466302}
   - {fileID: 437330}
   - {fileID: 476814}
+  - {fileID: 455018}
+  - {fileID: 428246}
+  - {fileID: 454312}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!4 &445552
@@ -1528,6 +1588,30 @@ Transform:
   - {fileID: 429142}
   m_Father: {fileID: 443560}
   m_RootOrder: 18
+--- !u!4 &454312
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 124022}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2, y: 1.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 443560}
+  m_RootOrder: 26
+--- !u!4 &455018
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 168636}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 443560}
+  m_RootOrder: 24
 --- !u!4 &455412
 Transform:
   m_ObjectHideFlags: 1
@@ -4123,13 +4207,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8ccda99088ce5d4ebbf86cfed46ee97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeedLeft: 7
-  moveSpeedRight: 7
-  stopTimeLeft: .300000012
-  stopTimeRight: .300000012
-  startMovingRight: 0
-  leftPoint: {fileID: 172710}
-  rightPoint: {fileID: 100624}
+  axis: 0
+  horizontalValues:
+    moveSpeedLeft: 2
+    moveSpeedRight: 2
+    stopTimeLeft: .5
+    stopTimeRight: .5
+    startMovingRight: 1
+    leftPoint: {fileID: 0}
+    rightPoint: {fileID: 0}
+  verticalValues:
+    moveSpeedUp: 2
+    moveSpeedDown: 2
+    stopTimeTop: .5
+    stopTimeBottom: .5
+    startMovingDown: 1
+    topPoint: {fileID: 0}
+    bottomPoint: {fileID: 0}
 --- !u!114 &11420410
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4185,13 +4279,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8ccda99088ce5d4ebbf86cfed46ee97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeedLeft: 7
-  moveSpeedRight: 7
-  stopTimeLeft: .300000012
-  stopTimeRight: .300000012
-  startMovingRight: 0
-  leftPoint: {fileID: 149256}
-  rightPoint: {fileID: 192206}
+  axis: 0
+  horizontalValues:
+    moveSpeedLeft: 2
+    moveSpeedRight: 2
+    stopTimeLeft: .5
+    stopTimeRight: .5
+    startMovingRight: 1
+    leftPoint: {fileID: 0}
+    rightPoint: {fileID: 0}
+  verticalValues:
+    moveSpeedUp: 2
+    moveSpeedDown: 2
+    stopTimeTop: .5
+    stopTimeBottom: .5
+    startMovingDown: 1
+    topPoint: {fileID: 0}
+    bottomPoint: {fileID: 0}
 --- !u!114 &11431298
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4225,13 +4329,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8ccda99088ce5d4ebbf86cfed46ee97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeedLeft: 7
-  moveSpeedRight: 7
-  stopTimeLeft: .300000012
-  stopTimeRight: .300000012
-  startMovingRight: 0
-  leftPoint: {fileID: 117104}
-  rightPoint: {fileID: 114082}
+  axis: 0
+  horizontalValues:
+    moveSpeedLeft: 2
+    moveSpeedRight: 2
+    stopTimeLeft: .5
+    stopTimeRight: .5
+    startMovingRight: 1
+    leftPoint: {fileID: 0}
+    rightPoint: {fileID: 0}
+  verticalValues:
+    moveSpeedUp: 2
+    moveSpeedDown: 2
+    stopTimeTop: .5
+    stopTimeBottom: .5
+    startMovingDown: 1
+    topPoint: {fileID: 0}
+    bottomPoint: {fileID: 0}
 --- !u!114 &11439402
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4276,13 +4390,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8ccda99088ce5d4ebbf86cfed46ee97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeedLeft: 7
-  moveSpeedRight: 7
-  stopTimeLeft: .300000012
-  stopTimeRight: .300000012
-  startMovingRight: 0
-  leftPoint: {fileID: 169880}
-  rightPoint: {fileID: 188778}
+  axis: 0
+  horizontalValues:
+    moveSpeedLeft: 2
+    moveSpeedRight: 2
+    stopTimeLeft: .5
+    stopTimeRight: .5
+    startMovingRight: 1
+    leftPoint: {fileID: 0}
+    rightPoint: {fileID: 0}
+  verticalValues:
+    moveSpeedUp: 2
+    moveSpeedDown: 2
+    stopTimeTop: .5
+    stopTimeBottom: .5
+    startMovingDown: 1
+    topPoint: {fileID: 0}
+    bottomPoint: {fileID: 0}
 --- !u!114 &11450864
 MonoBehaviour:
   m_ObjectHideFlags: 1
