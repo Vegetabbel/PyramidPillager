@@ -98,28 +98,44 @@ public class RandomizeMap : MonoBehaviour
 	}
 
 	void EnterRoom (string roomName) {
-		int roomNum;
-		roomNum = int.Parse(roomName.Substring (roomName.Length - 1, 1));
+		GameObject block;
+		int roomNum = 0;
 
-		GameObject block = (GameObject)Instantiate(doorBlock, levels[roomNum - 1].gameObject.transform.FindChild("BindPointEntry").position, Quaternion.identity);
+		if (roomName == "Middle") {
+			block = (GameObject)Instantiate(doorBlock, middleLevel.gameObject.transform.FindChild("BindPointEntry").position, Quaternion.identity);
+			block.transform.SetParent (middleLevel.transform);
+			respawnPoint = middleLevel.transform.Find("SpawnPoint").position;
+			levels[4].SetActive(false);
+		}
+		else if (roomName == "End") {
+			block = (GameObject)Instantiate(doorBlock, endLevel.gameObject.transform.FindChild("BindPointEntry").position, Quaternion.identity);
+			block.transform.SetParent (endLevel.transform);
+			respawnPoint = endLevel.transform.Find("SpawnPoint").position;
+			levels[9].SetActive(false);
+			block.transform.Rotate (new Vector3 (180, 180, 270));
+		}
+		else {
+			roomNum = int.Parse(roomName.Substring (3, 1 + (roomName.Length - 4)));
+			block = (GameObject)Instantiate(doorBlock, levels[roomNum - 1].gameObject.transform.FindChild("BindPointEntry").position, Quaternion.identity);
+			block.transform.SetParent (levels [roomNum - 1].transform);
+			respawnPoint = levels[roomNum - 1].transform.Find("SpawnPoint").position;
+
+			if (roomNum == 1) {
+				startLevel.SetActive (false);
+			}
+			else if (roomNum == 6) {
+				middleLevel.SetActive (false);
+			}
+			else {
+				levels[roomNum - 2].SetActive (false);
+			}
+		}
 
 		//TEMP
 		if (roomNum > 5) {
 			block.transform.Rotate (new Vector3 (360, 90, 0));
 		} else {
 			block.transform.Rotate (new Vector3 (90, 90, 0));
-		}
-
-
-		block.transform.SetParent (levels [roomNum - 1].transform);
-
-		respawnPoint = levels[roomNum - 1].transform.Find("SpawnPoint").position;
-
-		if (roomNum == 1) {
-			startLevel.SetActive (false);
-		}
-		else {
-			levels[roomNum - 2].SetActive (false);
 		}
 	}
 
