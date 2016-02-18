@@ -104,7 +104,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 405174}
   - 212: {fileID: 21263046}
-  - 95: {fileID: 9560236}
+  - 95: {fileID: 9518670}
   m_Layer: 8
   m_Name: SpriteRenderer
   m_TagString: ignore
@@ -169,7 +169,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 182902}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.03, y: 1.77, z: 0}
+  m_LocalPosition: {x: -0.3, y: 1.527, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 405174}
@@ -361,7 +361,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1.8, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!95 &9560236
+--- !u!95 &9518670
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 1
@@ -370,7 +370,7 @@ Animator:
   m_GameObject: {fileID: 154636}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 904cfca73369a1e43bb0c36933e0a487, type: 2}
+  m_Controller: {fileID: 9100000, guid: 093df26f45821a54984cc9dab0443eb7, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

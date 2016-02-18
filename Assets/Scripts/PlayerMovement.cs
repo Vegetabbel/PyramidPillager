@@ -106,6 +106,10 @@ public class PlayerMovement : MonoBehaviour {
     private Rigidbody rb;
     private BoxCollider bc;
     private SpriteRenderer sr;
+    private Animator anim;
+
+    private float latestXpos;
+    private float latestYpos;
 
     public GameObject formGauge;
     private SpriteRenderer formGaugeSR;
@@ -122,14 +126,45 @@ public class PlayerMovement : MonoBehaviour {
         rb = GetComponent<Rigidbody>();
         bc = GetComponent<BoxCollider>();
         sr = transform.Find("SpriteRenderer").GetComponent<SpriteRenderer>();
+        anim = transform.Find("SpriteRenderer").GetComponent<Animator>();
         maxMoveSpeedActive = isisValues.maxMoveSpeedNormal;
         playerForm = PlayerForm.Isis;
         formGaugeCurrentValue = formGaugeMaxValue;
         formGaugeSR = formGauge.GetComponent<SpriteRenderer>();
+
+        anim.SetBool("isIsis", true);
     }
 
     void Update()
     {
+        //Animator booleans
+        //Flip x if moving
+        anim.SetBool("isGrounded", isGrounded);
+        
+        if (latestXpos > transform.position.x && Input.GetKey(KeyCode.A))
+        {
+            sr.flipX = true;
+        }
+        if (latestXpos < transform.position.x && Input.GetKey(KeyCode.D))
+        {
+            sr.flipX = false;
+        }
+        latestXpos = transform.position.x;
+
+        //Check if rising or falling
+
+        if (rb.velocity.y != 0)
+        {
+            if (latestYpos - 0.2f > transform.position.y)
+            {
+                anim.SetBool("isGoingUp", false);
+            }
+            if (latestYpos + 0.2f < transform.position.y)
+            {
+                anim.SetBool("isGoingUp", true);
+            }
+        }        
+        latestYpos = transform.position.y;
         //Death
         if (!isAlive)
         {
@@ -150,11 +185,14 @@ public class PlayerMovement : MonoBehaviour {
             {
                 formGaugeCurrentValue -= formGaugeDecreaseValue * Time.deltaTime;
             }
-            else
+            else if (formGaugeCurrentValue < formGaugeMaxValue)
             {
                 formGaugeCurrentValue += formGaugeFillValue * Time.deltaTime;
             }
-
+            if (formGaugeCurrentValue > formGaugeMaxValue)
+            {
+                formGaugeCurrentValue = formGaugeMaxValue;
+            }
             if (formGaugeCurrentValue <= 0)
             {
                 isAlive = false;
@@ -190,11 +228,18 @@ public class PlayerMovement : MonoBehaviour {
 
                     bc.size = new Vector3(1f, 1.8f, 1f);
                     rb.useGravity = true;
-                    sr.sprite = isisSprite;
+                    //sr.sprite = isisSprite;
+                    if (!anim.GetBool("isIsis"));
+                    {
+                        anim.SetBool("isIsis", true);
+                        anim.SetBool("isCat", false);
+                        anim.SetBool("isHawk", false);
+                        anim.SetBool("isGhost", false);
+                    }
 
                     //Check if player is standing on something
-                    if (Physics.Raycast(bottomLeftCorner.transform.position, -Vector3.up, 0.2f) ||
-                        Physics.Raycast(bottomRightCorner.transform.position, -Vector3.up, 0.2f))
+                    if (Physics.Raycast(bottomLeftCorner.transform.position, -Vector3.up, 0.3f) ||
+                        Physics.Raycast(bottomRightCorner.transform.position, -Vector3.up, 0.3f))
                     {
                         isGrounded = true;
                     }
@@ -207,18 +252,25 @@ public class PlayerMovement : MonoBehaviour {
                     if (Input.GetKey(KeyCode.LeftShift) || !isGrounded)
                     {
                         maxMoveSpeedActive = isisValues.maxMoveSpeedSprint;
+                        anim.SetFloat("runSpeed", 1f);
                     }
                     else
                     {
                         maxMoveSpeedActive = isisValues.maxMoveSpeedNormal;
+                        anim.SetFloat("runSpeed", 1f);
                     }
                     if (Input.GetKey(KeyCode.LeftShift) && isGrounded)
                     {
                         accelerationSpeedActive = isisValues.accelerationSpeedSprint;
+                        if (Mathf.Abs(rb.velocity.x) > isisValues.maxMoveSpeedNormal)
+                        {
+                            anim.SetFloat("runSpeed", 1.5f);
+                        }
                     }
                     else
                     {
                         accelerationSpeedActive = isisValues.maxMoveSpeedNormal;
+                        anim.SetFloat("runSpeed", 1f);
                     }
 
                     //Set movement speed in air
@@ -231,16 +283,25 @@ public class PlayerMovement : MonoBehaviour {
                         accelerationSpeedActive = isisValues.accelerationSpeedNormal;
                     }
 
-                    //Move left
+                    //Running
+                    if (!(Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.A)))
+                    {
+                        anim.SetBool("isRunning", false);
+                    }
+                    //Move left                      
                     if (Input.GetKey(KeyCode.A))
                     {
                         rb.AddForce(-accelerationSpeedActive, 0, 0);
+                        anim.SetBool("isRunning", true);
                     }
                     //Move right
                     if (Input.GetKey(KeyCode.D))
                     {
                         rb.AddForce(accelerationSpeedActive, 0, 0);
-                    }
+                        anim.SetBool("isRunning", true);
+                    }                       
+
+
                     //Friction / stopping
                     if (isGrounded)
                     {
@@ -319,7 +380,14 @@ public class PlayerMovement : MonoBehaviour {
                     #region
                     bc.size = new Vector3(1f, 1f, 1f);
                     rb.useGravity = false;
-                    sr.sprite = hawkSprite;
+                    //sr.sprite = hawkSprite;
+                    if (!anim.GetBool("isHawk"));
+                    {
+                        anim.SetBool("isIsis", false);
+                        anim.SetBool("isCat", false);
+                        anim.SetBool("isHawk", true);
+                        anim.SetBool("isGhost", false);
+                    }
 
                     //Move left
                     if (Input.GetKey(KeyCode.A))
@@ -385,7 +453,14 @@ public class PlayerMovement : MonoBehaviour {
                     #region
                     bc.size = new Vector3(1.5f, 1f, 1f);
                     rb.useGravity = true;
-                    sr.sprite = catSprite;
+                    //sr.sprite = catSprite;
+                    if (!anim.GetBool("isCat")) ;
+                    {
+                        anim.SetBool("isIsis", false);
+                        anim.SetBool("isCat", true);
+                        anim.SetBool("isHawk", false);
+                        anim.SetBool("isGhost", false);
+                    }
 
                     //Check if player is standing on something
                     if (Physics.Raycast(catBottomLeftCorner.transform.position, -Vector3.up, 0.2f) ||
@@ -476,7 +551,14 @@ public class PlayerMovement : MonoBehaviour {
                     #region
                     bc.size = new Vector3(1f, 1.8f, 1f);
                     rb.useGravity = false;
-                    sr.sprite = ghostSprite;
+                    //sr.sprite = ghostSprite;
+                    if (!anim.GetBool("isGhost")) ;
+                    {
+                        anim.SetBool("isIsis", false);
+                        anim.SetBool("isCat", false);
+                        anim.SetBool("isHawk", false);
+                        anim.SetBool("isGhost", true);
+                    }
 
                     //Lower gravity
                     rb.AddForce(-Vector3.up * ghostValues.gravityPercentage * Physics.gravity.magnitude);
