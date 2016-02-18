@@ -115,6 +115,7 @@ public class PlayerMovement : MonoBehaviour {
     public GameObject catBottomLeftCorner;
     public GameObject catBottomRightCorner;
 
+	GameObject TutorialSpawnPoint;
 
     void Start ()
     {
@@ -132,9 +133,15 @@ public class PlayerMovement : MonoBehaviour {
         //Death
         if (!isAlive)
         {
-            sr.color = new Color(255, 0, 170);
-            rb.velocity.Set(0, 0, 0);
-            rb.isKinematic = true;
+            //sr.color = new Color(255, 0, 170);
+            //rb.velocity.Set(0, 0, 0);
+            //rb.isKinematic = true;
+			if (GameObject.Find("GameController")) {
+				GameObject.Find("GameController").SendMessage("Die");
+			}else if (GameObject.Find("SpawnPoint1")) {
+				this.transform.position = TutorialSpawnPoint.transform.position;
+			}
+			isAlive = true;
         }
         else
         { 
@@ -536,6 +543,10 @@ public class PlayerMovement : MonoBehaviour {
         }
 
     }
+	void TutorialCollider (GameObject spawn) {
+		TutorialSpawnPoint = spawn;
+	}
+
     public bool IsTouchingLeftWall
     {
         get { return isTouchingLeftWall;  }

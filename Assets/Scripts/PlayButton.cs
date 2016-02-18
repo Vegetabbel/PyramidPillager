@@ -17,13 +17,15 @@ public class PlayButton : MonoBehaviour {
 	{
 		LoadedLevel = Application.loadedLevel;
 
+		Application.LoadLevel ("RandomizerTest");
+
 		if (LoadedLevel == 0) {
-			Application.LoadLevel (1);
+			Application.LoadLevel (6);
 			LoadedLevel = Application.loadedLevel;
-		}
+		}/*
 		else if (LoadedLevel == 1) {
 			Application.LoadLevel (2);
-		}
+		}*/
 
 	}
 }

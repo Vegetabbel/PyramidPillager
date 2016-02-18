@@ -156,9 +156,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   doorBlock: {fileID: 173572, guid: ec3b9cee380009044ba1e28b087d92c5, type: 2}
-  startRoom: {fileID: 161602, guid: bd99a6861280cc844a3e1932f3a4c165, type: 2}
+  startRoom: {fileID: 113740, guid: 403ef6590ed8aaa4fb05e5bafd033133, type: 2}
   middleRoom: {fileID: 161908, guid: a1297561190eb1640b3f6cb13c926d31, type: 2}
-  endRoom: {fileID: 0}
+  endRoom: {fileID: 135824, guid: cfaa0b43c969cf642befe396fa395585, type: 2}
   playerPrefab: {fileID: 182902, guid: cd235675aed3d8642aa2bd8d0333d098, type: 2}
 --- !u!4 &995348571
 Transform:

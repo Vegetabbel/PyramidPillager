@@ -16,9 +16,10 @@ public class RandomizeMap : MonoBehaviour
 	private GameObject startLevel;
 	private GameObject middleLevel;
 	private GameObject endLevel;
-	private GameObject[] horizontalLevels = new GameObject[15];
+	private GameObject[] levels = new GameObject[15];
 
 	private GameObject[] horizontalPrefabs = new GameObject[14];
+	private GameObject[] verticalPrefabs = new GameObject[14];
 	GameObject childA;
 	GameObject childB;
 
@@ -26,13 +27,14 @@ public class RandomizeMap : MonoBehaviour
 
 	void Start()
 	{
-		//horizontalPrefabs = Resources.LoadAll<GameObject> ("Maps");
-		for (int i = 0; i < 14; i++) {
-			horizontalPrefabs[i] = Resources.Load<GameObject>("Horizontal0");
-		}
+		horizontalPrefabs = Resources.LoadAll<GameObject> ("Horizontal");
+		horizontalPrefabs = ArrayRandom (horizontalPrefabs);
 		print (horizontalPrefabs.Length);
 
-		//horizontalPrefabs = ArrayRandom (horizontalPrefabs);
+		verticalPrefabs = Resources.LoadAll<GameObject> ("Vertical");
+		verticalPrefabs = ArrayRandom (verticalPrefabs);
+		print (verticalPrefabs.Length);
+
 		RandomizeLevel();
 		CreatePlayer();
 	}
@@ -40,7 +42,7 @@ public class RandomizeMap : MonoBehaviour
 	public void RandomizeLevel()
 	{
 		startLevel = (GameObject)Instantiate(startRoom, Vector3.zero, Quaternion.identity);
-		startLevel.transform.Rotate(new Vector3(90,90,0));
+		//startLevel.transform.Rotate(new Vector3(90,90,0));
 		respawnPoint = startLevel.transform.Find("SpawnPoint").position;
 
 		childA = startLevel.gameObject.transform.FindChild("BindPointExit").gameObject;
@@ -52,7 +54,7 @@ public class RandomizeMap : MonoBehaviour
 		//MiddleLevel
 		middleLevel = (GameObject)Instantiate(middleRoom, Vector3.zero, Quaternion.identity);
 		childA = middleLevel.gameObject.transform.FindChild("BindPointEntry").gameObject;
-		childB = horizontalLevels[4].gameObject.transform.FindChild("BindPointExit").gameObject;
+		childB = levels[4].gameObject.transform.FindChild("BindPointExit").gameObject;
 		Vector3 offset = childB.transform.position - childA.transform.position;
 		middleLevel.transform.position += offset;
 		childA = middleLevel.gameObject.transform.FindChild ("BindPointExit").gameObject;
@@ -60,14 +62,25 @@ public class RandomizeMap : MonoBehaviour
 		for (int i = 5; i < 10; i++) {
 			SpawnRoom (i);
 		}
+
+		endLevel = (GameObject)Instantiate (endRoom, Vector3.zero, Quaternion.identity);
+		childA = endLevel.gameObject.transform.FindChild ("BindPointEntry").gameObject;
+		childB = levels [9].gameObject.transform.FindChild ("BindPointExit").gameObject;
+		offset = childB.transform.position - childA.transform.position;
+		endLevel.transform.position += offset;
 	}
 
 	void SpawnRoom (int num) {
 		if (num != 0 && num != 5) {
-			childA = horizontalLevels[num - 1].gameObject.transform.FindChild("BindPointExit").gameObject;
+			childA = levels[num - 1].gameObject.transform.FindChild("BindPointExit").gameObject;
 		}
 
-		horizontalLevels[num] = (GameObject)Instantiate(horizontalPrefabs[num], Vector3.zero, Quaternion.identity);
+		if (num >= 5) {
+			levels[num] = (GameObject)Instantiate(verticalPrefabs[num - 5], Vector3.zero, Quaternion.identity);
+		}
+		else {
+			levels[num] = (GameObject)Instantiate(horizontalPrefabs[num], Vector3.zero, Quaternion.identity);
+		}
 
 		//TEMP!!!
 //		if (num < 5) {
@@ -77,18 +90,18 @@ public class RandomizeMap : MonoBehaviour
 //			horizontalLevels[num].transform.Rotate(new Vector3(360,90,0));
 //		}
 		
-		childB = horizontalLevels[num].gameObject.transform.FindChild("BindPointEntry").gameObject;
-		horizontalLevels[num].name = "Map" + (num + 1);
+		childB = levels[num].gameObject.transform.FindChild("BindPointEntry").gameObject;
+		levels[num].name = "Map" + (num + 1);
 
 		Vector3 offset = childA.transform.position - childB.transform.position;
-		horizontalLevels[num].transform.position += offset;
+		levels[num].transform.position += offset;
 	}
 
 	void EnterRoom (string roomName) {
 		int roomNum;
 		roomNum = int.Parse(roomName.Substring (roomName.Length - 1, 1));
 
-		GameObject block = (GameObject)Instantiate(doorBlock, horizontalLevels[roomNum - 1].gameObject.transform.FindChild("BindPointEntry").position, Quaternion.identity);
+		GameObject block = (GameObject)Instantiate(doorBlock, levels[roomNum - 1].gameObject.transform.FindChild("BindPointEntry").position, Quaternion.identity);
 
 		//TEMP
 		if (roomNum > 5) {
@@ -98,15 +111,15 @@ public class RandomizeMap : MonoBehaviour
 		}
 
 
-		block.transform.SetParent (horizontalLevels [roomNum - 1].transform);
+		block.transform.SetParent (levels [roomNum - 1].transform);
 
-		respawnPoint = horizontalLevels[roomNum - 1].transform.Find("SpawnPoint").position;
+		respawnPoint = levels[roomNum - 1].transform.Find("SpawnPoint").position;
 
 		if (roomNum == 1) {
 			startLevel.SetActive (false);
 		}
 		else {
-			horizontalLevels[roomNum - 2].SetActive (false);
+			levels[roomNum - 2].SetActive (false);
 		}
 	}
 
