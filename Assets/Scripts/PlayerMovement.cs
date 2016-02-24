@@ -143,11 +143,11 @@ public class PlayerMovement : MonoBehaviour {
         
         if (latestXpos > transform.position.x && Input.GetKey(KeyCode.A))
         {
-            sr.flipX = true;
+            //sr.flipX = true;
         }
         if (latestXpos < transform.position.x && Input.GetKey(KeyCode.D))
         {
-            sr.flipX = false;
+            //sr.flipX = false;
         }
         latestXpos = transform.position.x;
 
