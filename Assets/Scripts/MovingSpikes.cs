@@ -14,9 +14,6 @@ public class MovingSpikes : MonoBehaviour {
         public float stopTimeLeft = 0.5f;
         public float stopTimeRight = 0.5f;
         public bool startMovingRight = true;
-
-        public GameObject leftPoint;
-        public GameObject rightPoint;
     }
     public HorizontalValues horizontalValues = new HorizontalValues();
     [System.Serializable]
@@ -27,41 +24,47 @@ public class MovingSpikes : MonoBehaviour {
         public float stopTimeTop = 0.5f;
         public float stopTimeBottom = 0.5f;
         public bool startMovingDown = true;
-
-        public GameObject topPoint;
-        public GameObject bottomPoint;
     }
     public VerticalValues verticalValues = new VerticalValues();
 
+    private GameObject leftPoint;
+    private GameObject rightPoint;
+    private GameObject topPoint;
+    private GameObject bottomPoint;
+
+    private float stopTime;
+
+    private bool moving = true;
     private bool atLeftPoint;
     private bool atTopPoint;
 
-	void Start ()
+    void Start ()
     {
+        leftPoint = gameObject.transform.parent.Find("Left Point").gameObject;
+        rightPoint = gameObject.transform.parent.Find("Right Point").gameObject;
+        topPoint = gameObject.transform.parent.Find("Top Point").gameObject;
+        bottomPoint = gameObject.transform.parent.Find("Bottom Point").gameObject;
+
         switch (axis)
-        {
+        {          
             case Axis.Horizontal:
                 if (horizontalValues.startMovingRight)
                 {
                     atLeftPoint = true;
-                    moveRight();
                 }
                 else
                 {
                     atLeftPoint = false;
-                    moveLeft();
                 }
                 break;
             case Axis.Vertical:
                 if (verticalValues.startMovingDown)
                 {
                     atTopPoint = true;
-                    moveDown();
                 }
                 else
                 {
                     atTopPoint = false;
-                    moveUp();
                 }
                 break;
             default:
@@ -72,113 +75,102 @@ public class MovingSpikes : MonoBehaviour {
 
     void Update()
     {
-        switch (axis)
+        if (moving)
         {
-            case Axis.Horizontal:
-                if (atLeftPoint)
-                {
-                    Invoke("moveRight", horizontalValues.stopTimeLeft);
-                }
-                else
-                {
-                    Invoke("moveLeft", horizontalValues.stopTimeRight);
-                }
-                break;
-            case Axis.Vertical:
-                if (atTopPoint)
-                {
-                    Invoke("moveDown", verticalValues.stopTimeTop);
-                }
-                else
-                {
-                    Invoke("moveUp", verticalValues.stopTimeBottom);
-                }
-                break;
-            default:
-                break;
+            switch (axis)
+            {
+                case Axis.Horizontal:
+                    if (atLeftPoint)
+                    {
+                        moveRight();
+                    }
+                    if (!atLeftPoint)
+                    {
+                        moveLeft();
+                    }
+                    break;
+                case Axis.Vertical:
+                    if (atTopPoint)
+                    {
+                        moveDown();
+                    }
+                    if (!atTopPoint)
+                    {
+                        moveUp();
+                    }
+                    break;
+                default:
+                    Debug.Log("No axis selected");
+                    break;
+            }
         }
+        else if (!IsInvoking("ToggleMovement"))
+        {
+            Invoke("ToggleMovement", stopTime);
+        }
+    }
 
+    private void ToggleMovement()
+    {
+        moving = true;
     }
 
     private void moveLeft()
     {
-        if (!(transform.position.x - horizontalValues.moveSpeedLeft * Time.deltaTime <= horizontalValues.leftPoint.transform.position.x))
+        if (transform.position.x - horizontalValues.moveSpeedLeft * Time.deltaTime <= leftPoint.transform.position.x)
         {
-            if (transform.position.x > horizontalValues.leftPoint.transform.position.x)
-            {
-                transform.position = new Vector3(transform.position.x - horizontalValues.moveSpeedLeft * Time.deltaTime, transform.position.y, 0f);
-            }
-            else
-            {
-                transform.position = horizontalValues.leftPoint.transform.position;
-                atLeftPoint = true;
-            }
+            transform.position = leftPoint.transform.position;
+            atLeftPoint = true;
+            moving = false;
+            stopTime = horizontalValues.stopTimeLeft;
         }
         else
         {
-            transform.position = horizontalValues.leftPoint.transform.position;
-            atLeftPoint = true;
+            transform.position = new Vector3(transform.position.x - horizontalValues.moveSpeedLeft * Time.deltaTime, transform.position.y, 0f);
         }
     }
+
     private void moveRight()
     {
-        if (!(transform.position.x + horizontalValues.moveSpeedRight * Time.deltaTime >= horizontalValues.rightPoint.transform.position.x))
+        if (transform.position.x + horizontalValues.moveSpeedRight * Time.deltaTime >= rightPoint.transform.position.x)
         {
-            if (transform.position.x < horizontalValues.rightPoint.transform.position.x)
-            {
-                transform.position = new Vector3(transform.position.x + horizontalValues.moveSpeedRight * Time.deltaTime, transform.position.y, 0f);
-            }
-            else
-            {
-                transform.position = horizontalValues.rightPoint.transform.position;
-                atLeftPoint = false;
-            }
+            transform.position = rightPoint.transform.position;
+            atLeftPoint = false;
+            moving = false;
+            stopTime = horizontalValues.stopTimeRight;
         }
         else
         {
-            transform.position = horizontalValues.rightPoint.transform.position;
-            atLeftPoint = false;
+            transform.position = new Vector3(transform.position.x + horizontalValues.moveSpeedRight * Time.deltaTime, transform.position.y, 0f);
         }
     }
 
     private void moveUp()
     {
-        if (!(transform.position.y + verticalValues.moveSpeedUp * Time.deltaTime >= verticalValues.topPoint.transform.position.y))
+        if (transform.position.y + verticalValues.moveSpeedUp * Time.deltaTime >= topPoint.transform.position.y)
         {
-            if (transform.position.y < verticalValues.topPoint.transform.position.y)
-            {
-                transform.position = new Vector3(transform.position.x, transform.position.y + verticalValues.moveSpeedUp * Time.deltaTime, 0f);
-            }
-            else
-            {
-                transform.position = verticalValues.topPoint.transform.position;
-                atTopPoint = true;
-            }
+            transform.position = topPoint.transform.position;
+            atTopPoint = true;
+            moving = false;
+            stopTime = verticalValues.stopTimeTop;
         }
         else
         {
-            transform.position = verticalValues.topPoint.transform.position;
-            atTopPoint = true;
+            transform.position = new Vector3(transform.position.x, transform.position.y + verticalValues.moveSpeedUp * Time.deltaTime, 0f);
         }
     }
     private void moveDown()
     {
-        if (!(transform.position.y - verticalValues.moveSpeedDown * Time.deltaTime <= verticalValues.bottomPoint.transform.position.y))
+        if (transform.position.y - verticalValues.moveSpeedDown * Time.deltaTime <= bottomPoint.transform.position.y)
         {
-            if (transform.position.y > verticalValues.bottomPoint.transform.position.y)
-            {
-                transform.position = new Vector3(transform.position.x, transform.position.y - verticalValues.moveSpeedDown * Time.deltaTime, 0f);
-            }
-            else
-            {
-                transform.position = verticalValues.bottomPoint.transform.position;
-                atTopPoint = false;
-            }
+            transform.position = bottomPoint.transform.position;
+            atTopPoint = false;
+            moving = false;
+            stopTime = verticalValues.stopTimeBottom;
         }
         else
         {
-            transform.position = verticalValues.bottomPoint.transform.position;
-            atTopPoint = false;
+            transform.position = new Vector3(transform.position.x, transform.position.y - verticalValues.moveSpeedDown * Time.deltaTime, 0f);
         }
     }
 }

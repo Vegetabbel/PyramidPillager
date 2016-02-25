@@ -138,7 +138,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100378}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.5, y: 1.08557248, z: 0}
+  m_LocalPosition: {x: 7.5, y: 2.63, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 424474}
@@ -190,8 +190,10 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 1
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_AutoUVMaxDistance: .5
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
@@ -241,19 +243,15 @@ MonoBehaviour:
   horizontalValues:
     moveSpeedLeft: 40
     moveSpeedRight: 30
-    stopTimeLeft: 10
+    stopTimeLeft: 3
     stopTimeRight: 2
     startMovingRight: 1
-    leftPoint: {fileID: 167844}
-    rightPoint: {fileID: 110764}
   verticalValues:
-    moveSpeedUp: 2
-    moveSpeedDown: 40
-    stopTimeTop: 1
-    stopTimeBottom: 1
+    moveSpeedUp: 10.8
+    moveSpeedDown: 33.75
+    stopTimeTop: 2.1
+    stopTimeBottom: 0.6
     startMovingDown: 1
-    topPoint: {fileID: 152912}
-    bottomPoint: {fileID: 106462}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
