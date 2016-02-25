@@ -40,10 +40,22 @@ public class MovingSpikes : MonoBehaviour {
 
     void Start ()
     {
-        leftPoint = gameObject.transform.parent.Find("Left Point").gameObject;
-        rightPoint = gameObject.transform.parent.Find("Right Point").gameObject;
-        topPoint = gameObject.transform.parent.Find("Top Point").gameObject;
-        bottomPoint = gameObject.transform.parent.Find("Bottom Point").gameObject;
+        if (gameObject.transform.parent.Find("Left Point").gameObject != null)
+        {
+            leftPoint = gameObject.transform.parent.Find("Left Point").gameObject;
+        }
+        if (gameObject.transform.parent.Find("Right Point").gameObject != null)
+        {
+            rightPoint = gameObject.transform.parent.Find("Right Point").gameObject;
+        }
+        if (gameObject.transform.parent.Find("Top Point").gameObject != null)
+        {
+            topPoint = gameObject.transform.parent.Find("Top Point").gameObject;
+        }
+        if (gameObject.transform.parent.Find("Bottom Point").gameObject != null)
+        {
+            bottomPoint = gameObject.transform.parent.Find("Bottom Point").gameObject;
+        }
 
         switch (axis)
         {          
@@ -117,60 +129,88 @@ public class MovingSpikes : MonoBehaviour {
 
     private void moveLeft()
     {
-        if (transform.position.x - horizontalValues.moveSpeedLeft * Time.deltaTime <= leftPoint.transform.position.x)
+        if (leftPoint != null)
         {
-            transform.position = leftPoint.transform.position;
-            atLeftPoint = true;
-            moving = false;
-            stopTime = horizontalValues.stopTimeLeft;
+            if (transform.position.x - horizontalValues.moveSpeedLeft * Time.deltaTime <= leftPoint.transform.position.x)
+            {
+                transform.position = leftPoint.transform.position;
+                atLeftPoint = true;
+                moving = false;
+                stopTime = horizontalValues.stopTimeLeft;
+            }
+            else
+            {
+                transform.position = new Vector3(transform.position.x - horizontalValues.moveSpeedLeft * Time.deltaTime, transform.position.y, 0f);
+            }
         }
         else
         {
-            transform.position = new Vector3(transform.position.x - horizontalValues.moveSpeedLeft * Time.deltaTime, transform.position.y, 0f);
+            Debug.Log("Left Point has been deleted/does not exist");
         }
     }
 
     private void moveRight()
     {
-        if (transform.position.x + horizontalValues.moveSpeedRight * Time.deltaTime >= rightPoint.transform.position.x)
+        if (rightPoint != null)
         {
-            transform.position = rightPoint.transform.position;
-            atLeftPoint = false;
-            moving = false;
-            stopTime = horizontalValues.stopTimeRight;
+            if (transform.position.x + horizontalValues.moveSpeedRight * Time.deltaTime >= rightPoint.transform.position.x)
+            {
+                transform.position = rightPoint.transform.position;
+                atLeftPoint = false;
+                moving = false;
+                stopTime = horizontalValues.stopTimeRight;
+            }
+            else
+            {
+                transform.position = new Vector3(transform.position.x + horizontalValues.moveSpeedRight * Time.deltaTime, transform.position.y, 0f);
+            }
         }
         else
         {
-            transform.position = new Vector3(transform.position.x + horizontalValues.moveSpeedRight * Time.deltaTime, transform.position.y, 0f);
+            Debug.Log("Right Point has been deleted/does not exist");
         }
     }
 
     private void moveUp()
     {
-        if (transform.position.y + verticalValues.moveSpeedUp * Time.deltaTime >= topPoint.transform.position.y)
+        if (topPoint != null)
         {
-            transform.position = topPoint.transform.position;
-            atTopPoint = true;
-            moving = false;
-            stopTime = verticalValues.stopTimeTop;
+            if (transform.position.y + verticalValues.moveSpeedUp * Time.deltaTime >= topPoint.transform.position.y)
+            {
+                transform.position = topPoint.transform.position;
+                atTopPoint = true;
+                moving = false;
+                stopTime = verticalValues.stopTimeTop;
+            }
+            else
+            {
+                transform.position = new Vector3(transform.position.x, transform.position.y + verticalValues.moveSpeedUp * Time.deltaTime, 0f);
+            }
         }
         else
-        {
-            transform.position = new Vector3(transform.position.x, transform.position.y + verticalValues.moveSpeedUp * Time.deltaTime, 0f);
+	    {
+            Debug.Log("Top Point has been deleted/does not exist");
         }
     }
     private void moveDown()
     {
-        if (transform.position.y - verticalValues.moveSpeedDown * Time.deltaTime <= bottomPoint.transform.position.y)
+        if (bottomPoint != null)
         {
-            transform.position = bottomPoint.transform.position;
-            atTopPoint = false;
-            moving = false;
-            stopTime = verticalValues.stopTimeBottom;
+            if (transform.position.y - verticalValues.moveSpeedDown * Time.deltaTime <= bottomPoint.transform.position.y)
+            {
+                transform.position = bottomPoint.transform.position;
+                atTopPoint = false;
+                moving = false;
+                stopTime = verticalValues.stopTimeBottom;
+            }
+            else
+            {
+                transform.position = new Vector3(transform.position.x, transform.position.y - verticalValues.moveSpeedDown * Time.deltaTime, 0f);
+            }
         }
         else
-        {
-            transform.position = new Vector3(transform.position.x, transform.position.y - verticalValues.moveSpeedDown * Time.deltaTime, 0f);
+	    {
+            Debug.Log("Bottom Point has been deleted/does not exist");
         }
     }
 }
