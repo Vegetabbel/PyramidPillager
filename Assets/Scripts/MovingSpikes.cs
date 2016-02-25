@@ -96,7 +96,7 @@ public class MovingSpikes : MonoBehaviour {
                     {
                         moveRight();
                     }
-                    if (!atLeftPoint)
+                    else if (!atLeftPoint)
                     {
                         moveLeft();
                     }
@@ -106,7 +106,7 @@ public class MovingSpikes : MonoBehaviour {
                     {
                         moveDown();
                     }
-                    if (!atTopPoint)
+                    else if (!atTopPoint)
                     {
                         moveUp();
                     }
@@ -133,7 +133,7 @@ public class MovingSpikes : MonoBehaviour {
         {
             if (transform.position.x - horizontalValues.moveSpeedLeft * Time.deltaTime <= leftPoint.transform.position.x)
             {
-                transform.position = leftPoint.transform.position;
+                transform.position = new Vector3(leftPoint.transform.position.x, leftPoint.transform.position.y, 0f);
                 atLeftPoint = true;
                 moving = false;
                 stopTime = horizontalValues.stopTimeLeft;
@@ -155,7 +155,7 @@ public class MovingSpikes : MonoBehaviour {
         {
             if (transform.position.x + horizontalValues.moveSpeedRight * Time.deltaTime >= rightPoint.transform.position.x)
             {
-                transform.position = rightPoint.transform.position;
+                transform.position = new Vector3(rightPoint.transform.position.x, rightPoint.transform.position.y, 0f);
                 atLeftPoint = false;
                 moving = false;
                 stopTime = horizontalValues.stopTimeRight;
@@ -177,7 +177,7 @@ public class MovingSpikes : MonoBehaviour {
         {
             if (transform.position.y + verticalValues.moveSpeedUp * Time.deltaTime >= topPoint.transform.position.y)
             {
-                transform.position = topPoint.transform.position;
+                transform.position = new Vector3(topPoint.transform.position.x, topPoint.transform.position.y, 0f);
                 atTopPoint = true;
                 moving = false;
                 stopTime = verticalValues.stopTimeTop;
@@ -198,7 +198,7 @@ public class MovingSpikes : MonoBehaviour {
         {
             if (transform.position.y - verticalValues.moveSpeedDown * Time.deltaTime <= bottomPoint.transform.position.y)
             {
-                transform.position = bottomPoint.transform.position;
+                transform.position = new Vector3(bottomPoint.transform.position.x, bottomPoint.transform.position.y, 0f);
                 atTopPoint = false;
                 moving = false;
                 stopTime = verticalValues.stopTimeBottom;
