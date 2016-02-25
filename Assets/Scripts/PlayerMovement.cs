@@ -68,10 +68,10 @@ public class PlayerMovement : MonoBehaviour {
     public enum PlayerForm { Isis, Hawk, Cat, Ghost };
     public PlayerForm playerForm;
 
-    public Sprite isisSprite;
-    public Sprite hawkSprite;
-    public Sprite catSprite;
-    public Sprite ghostSprite;
+    public Object isisAnimController;
+    public Object hawkAnimController;
+    public Object catAnimController;
+    public Object ghostAnimController;
 
     private float formGaugeCurrentValue;
     public float formGaugeDecreaseValue = 20;
@@ -127,12 +127,13 @@ public class PlayerMovement : MonoBehaviour {
         bc = GetComponent<BoxCollider>();
         sr = transform.Find("SpriteRenderer").GetComponent<SpriteRenderer>();
         anim = transform.Find("SpriteRenderer").GetComponent<Animator>();
+
         maxMoveSpeedActive = isisValues.maxMoveSpeedNormal;
         playerForm = PlayerForm.Isis;
         formGaugeCurrentValue = formGaugeMaxValue;
         formGaugeSR = formGauge.GetComponent<SpriteRenderer>();
 
-        anim.SetBool("isIsis", true);
+        anim.runtimeAnimatorController = (RuntimeAnimatorController)isisAnimController;
     }
 
     void Update()
@@ -220,20 +221,53 @@ public class PlayerMovement : MonoBehaviour {
             if (playerForm == PlayerForm.Isis && formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.Space) && Input.GetKeyDown(KeyCode.Mouse0))
             {
                 playerForm = PlayerForm.Hawk;
+
+                bc.size = new Vector3(1f, 1f, 1f);
+                rb.useGravity = false;
+
+                if (anim.runtimeAnimatorController != (RuntimeAnimatorController)hawkAnimController)
+                {
+                    anim.runtimeAnimatorController = (RuntimeAnimatorController)hawkAnimController;
+                }
             }
             else if (playerForm == PlayerForm.Isis && formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.D) && Input.GetKeyDown(KeyCode.Mouse0)
                 || playerForm == PlayerForm.Isis && formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.A) && Input.GetKeyDown(KeyCode.Mouse0))
             {
                 playerForm = PlayerForm.Cat;
+
+                bc.size = new Vector3(1.5f, 1f, 1f);
+                rb.useGravity = true;
+
+                if (anim.runtimeAnimatorController != (RuntimeAnimatorController)catAnimController)
+                {
+                    anim.runtimeAnimatorController = (RuntimeAnimatorController)catAnimController;
+                }
             }
             else if (playerForm == PlayerForm.Isis && formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.S) && Input.GetKeyDown(KeyCode.Mouse0))
             {
                 playerForm = PlayerForm.Ghost;
+
                 rb.velocity = new Vector3(rb.velocity.x, 0f, 0f);
+
+                bc.size = new Vector3(1f, 1.8f, 1f);
+                rb.useGravity = false;
+
+                if (anim.runtimeAnimatorController != (RuntimeAnimatorController)ghostAnimController)
+                {
+                    anim.runtimeAnimatorController = (RuntimeAnimatorController)ghostAnimController;
+                }
             }
             else if (Input.GetKeyDown(KeyCode.Mouse0))
             {
                 playerForm = PlayerForm.Isis;
+
+                bc.size = new Vector3(1f, 1.8f, 1f);
+                rb.useGravity = true;
+
+                if (anim.runtimeAnimatorController != (RuntimeAnimatorController)isisAnimController)
+                {
+                    anim.runtimeAnimatorController = (RuntimeAnimatorController)isisAnimController;
+                }
             }
 
             //Change controls based on active form
@@ -241,17 +275,6 @@ public class PlayerMovement : MonoBehaviour {
             {
                 case PlayerForm.Isis:
                     #region
-
-                    bc.size = new Vector3(1f, 1.8f, 1f);
-                    rb.useGravity = true;
-                    //sr.sprite = isisSprite;
-                    if (!anim.GetBool("isIsis"));
-                    {
-                        anim.SetBool("isIsis", true);
-                        anim.SetBool("isCat", false);
-                        anim.SetBool("isHawk", false);
-                        anim.SetBool("isGhost", false);
-                    }
 
                     //Check if player is standing on something
                     if (Physics.Raycast(bottomLeftCorner.transform.position, -Vector3.up, 0.3f) ||
@@ -394,16 +417,6 @@ public class PlayerMovement : MonoBehaviour {
                 #endregion
                 case PlayerForm.Hawk:
                     #region
-                    bc.size = new Vector3(1f, 1f, 1f);
-                    rb.useGravity = false;
-                    //sr.sprite = hawkSprite;
-                    if (!anim.GetBool("isHawk"));
-                    {
-                        anim.SetBool("isIsis", false);
-                        anim.SetBool("isCat", false);
-                        anim.SetBool("isHawk", true);
-                        anim.SetBool("isGhost", false);
-                    }
 
                     //Move left
                     if (Input.GetKey(KeyCode.A))
@@ -467,16 +480,6 @@ public class PlayerMovement : MonoBehaviour {
                 #endregion
                 case PlayerForm.Cat:
                     #region
-                    bc.size = new Vector3(1.5f, 1f, 1f);
-                    rb.useGravity = true;
-                    //sr.sprite = catSprite;
-                    if (!anim.GetBool("isCat")) ;
-                    {
-                        anim.SetBool("isIsis", false);
-                        anim.SetBool("isCat", true);
-                        anim.SetBool("isHawk", false);
-                        anim.SetBool("isGhost", false);
-                    }
 
                     //Check if player is standing on something
                     if (Physics.Raycast(catBottomLeftCorner.transform.position, -Vector3.up, 0.2f) ||
@@ -565,16 +568,6 @@ public class PlayerMovement : MonoBehaviour {
                 #endregion
                 case PlayerForm.Ghost:
                     #region
-                    bc.size = new Vector3(1f, 1.8f, 1f);
-                    rb.useGravity = false;
-                    //sr.sprite = ghostSprite;
-                    if (!anim.GetBool("isGhost")) ;
-                    {
-                        anim.SetBool("isIsis", false);
-                        anim.SetBool("isCat", false);
-                        anim.SetBool("isHawk", false);
-                        anim.SetBool("isGhost", true);
-                    }
 
                     //Lower gravity
                     rb.AddForce(-Vector3.up * ghostValues.gravityPercentage * Physics.gravity.magnitude);

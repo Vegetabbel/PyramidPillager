@@ -169,7 +169,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 182902}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.3, y: 1.527, z: 0}
+  m_LocalPosition: {x: 11, y: 4.85, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 405174}
@@ -403,10 +403,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerState: 0
   playerForm: 0
-  isisSprite: {fileID: 21300000, guid: c62a203e673ce9c4590c4006760d218a, type: 3}
-  hawkSprite: {fileID: 21300000, guid: dbcb0fc9e8de2104bab4f51f586c637b, type: 3}
-  catSprite: {fileID: 21300000, guid: 58a88e606e4783d4ea6c7c4e09ca7ec1, type: 3}
-  ghostSprite: {fileID: 21300000, guid: c945743e7d7ae8844a045f7baeed8034, type: 3}
+  isisAnimController: {fileID: 9100000, guid: 093df26f45821a54984cc9dab0443eb7, type: 2}
+  hawkAnimController: {fileID: 9100000, guid: 0acee843ca4bfef499cc0b4f25cb9535, type: 2}
+  catAnimController: {fileID: 9100000, guid: 177aada54aab45242be386a7050c7f95, type: 2}
+  ghostAnimController: {fileID: 9100000, guid: 7cb8ced93bf76c64f8d6e345041b8cd4, type: 2}
   formGaugeDecreaseValue: 20
   formGaugeFillValue: 10
   formGaugeMaxValue: 100
