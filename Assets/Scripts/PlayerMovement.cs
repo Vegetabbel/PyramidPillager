@@ -151,19 +151,35 @@ public class PlayerMovement : MonoBehaviour {
         }
         latestXpos = transform.position.x;
 
-        //Check if rising or falling
+        //Check if going up or down
 
+        if (rb.velocity.y != 0)
+        {
+            if (latestYpos > transform.position.y)
+            {
+                anim.SetBool("isGoingUp", false);
+            }
+            if (latestYpos < transform.position.y)
+            {
+                anim.SetBool("isGoingUp", true);
+            }
+        }
+        //Check if falling from high
         if (rb.velocity.y != 0)
         {
             if (latestYpos - 0.2f > transform.position.y)
             {
-                anim.SetBool("isGoingUp", false);
+                anim.SetBool("isFalling", true);
             }
-            if (latestYpos + 0.2f < transform.position.y)
+            else
             {
-                anim.SetBool("isGoingUp", true);
+                anim.SetBool("isFalling", false);
             }
-        }        
+        }
+        else
+        {
+            anim.SetBool("isFalling", false);
+        }
         latestYpos = transform.position.y;
         //Death
         if (!isAlive)
