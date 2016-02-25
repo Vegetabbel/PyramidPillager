@@ -9,7 +9,7 @@ public class ArrowScript : MonoBehaviour {
     private float speed;
 
     private GameObject parentStatue;
-	
+
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject != parentStatue)
@@ -22,8 +22,8 @@ public class ArrowScript : MonoBehaviour {
             {
                 arrowIsActive = false;
                 gameObject.SetActive(false);
-            }          
-        }        
+            }
+        }
     }
 
 	void Update ()

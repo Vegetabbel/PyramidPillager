@@ -36,7 +36,7 @@ public class ArrowDispenser : MonoBehaviour {
             {
                 objectPool.arrowPool[i].SetActive(true);
                 objectPool.arrowPool[i].transform.position = transform.position;
-                objectPool.arrowPool[i].transform.LookAt(destination.transform);
+                objectPool.arrowPool[i].transform.LookAt(destination.transform, Vector3.left);
                 objectPool.arrowPool[i].GetComponent<ArrowScript>().ArrowIsActive = true;
                 objectPool.arrowPool[i].GetComponent<ArrowScript>().GetParentStatueValues(gameObject);
                 break;
@@ -46,11 +46,10 @@ public class ArrowDispenser : MonoBehaviour {
                 GameObject arrow = objectPool.createNewArrow();
                 arrow.SetActive(true);
                 arrow.transform.position = transform.position;
-                arrow.transform.LookAt(destination.transform);
+                arrow.transform.LookAt(destination.transform, Vector3.left);
                 arrow.GetComponent<ArrowScript>().ArrowIsActive = true;
                 arrow.GetComponent<ArrowScript>().GetParentStatueValues(gameObject);
                 break;
-                //Debug.Log("lol");
             }
         }
 
