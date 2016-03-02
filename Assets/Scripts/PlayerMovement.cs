@@ -276,6 +276,17 @@ public class PlayerMovement : MonoBehaviour {
                 case PlayerForm.Isis:
                     #region
 
+                    anim.SetBool("onRightWall", isTouchingRightWall);
+                    anim.SetBool("onLeftWall", isTouchingLeftWall);
+                    if (!isGrounded && isTouchingLeftWall)
+                    {
+                        sr.flipX = false;
+                    }
+                    if (!isGrounded && isTouchingRightWall)
+                    {
+                        sr.flipX = true;
+                    }
+
                     //Check if player is standing on something
                     if (Physics.Raycast(bottomLeftCorner.transform.position, -Vector3.up, 0.3f) ||
                         Physics.Raycast(bottomRightCorner.transform.position, -Vector3.up, 0.3f))
