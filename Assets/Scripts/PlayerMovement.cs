@@ -142,11 +142,11 @@ public class PlayerMovement : MonoBehaviour {
         //Flip x if moving
         anim.SetBool("isGrounded", isGrounded);
         
-        if (latestXpos > transform.position.x && Input.GetKey(KeyCode.A))
+        if (latestXpos > transform.position.x && Input.GetKey(KeyCode.LeftArrow))
         {
             sr.flipX = true;
         }
-        if (latestXpos < transform.position.x && Input.GetKey(KeyCode.D))
+        if (latestXpos < transform.position.x && Input.GetKey(KeyCode.RightArrow))
         {
             sr.flipX = false;
         }
@@ -218,7 +218,7 @@ public class PlayerMovement : MonoBehaviour {
             formGaugeSR.color = new Color(0.0f, 0.0f, formGaugeCurrentValue * 0.01f);
 
             //Transformations
-            if (playerForm == PlayerForm.Isis && formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.Space) && Input.GetKeyDown(KeyCode.Mouse0))
+            if (playerForm == PlayerForm.Isis && formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.UpArrow) && Input.GetKeyDown(KeyCode.Z))
             {
                 playerForm = PlayerForm.Hawk;
 
@@ -230,8 +230,8 @@ public class PlayerMovement : MonoBehaviour {
                     anim.runtimeAnimatorController = (RuntimeAnimatorController)hawkAnimController;
                 }
             }
-            else if (playerForm == PlayerForm.Isis && formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.D) && Input.GetKeyDown(KeyCode.Mouse0)
-                || playerForm == PlayerForm.Isis && formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.A) && Input.GetKeyDown(KeyCode.Mouse0))
+            else if (playerForm == PlayerForm.Isis && formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.RightArrow) && Input.GetKeyDown(KeyCode.Z)
+                || playerForm == PlayerForm.Isis && formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.LeftArrow) && Input.GetKeyDown(KeyCode.Z))
             {
                 playerForm = PlayerForm.Cat;
 
@@ -243,7 +243,7 @@ public class PlayerMovement : MonoBehaviour {
                     anim.runtimeAnimatorController = (RuntimeAnimatorController)catAnimController;
                 }
             }
-            else if (playerForm == PlayerForm.Isis && formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.S) && Input.GetKeyDown(KeyCode.Mouse0))
+            else if (playerForm == PlayerForm.Isis && formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.DownArrow) && Input.GetKeyDown(KeyCode.Z))
             {
                 playerForm = PlayerForm.Ghost;
 
@@ -257,7 +257,7 @@ public class PlayerMovement : MonoBehaviour {
                     anim.runtimeAnimatorController = (RuntimeAnimatorController)ghostAnimController;
                 }
             }
-            else if (Input.GetKeyDown(KeyCode.Mouse0))
+            else if (Input.GetKeyDown(KeyCode.Z))
             {
                 playerForm = PlayerForm.Isis;
 
@@ -288,7 +288,7 @@ public class PlayerMovement : MonoBehaviour {
                     }
 
                     //Sprinting
-                    if (Input.GetKey(KeyCode.LeftShift) || !isGrounded)
+                    if (Input.GetKey(KeyCode.X) || !isGrounded)
                     {
                         maxMoveSpeedActive = isisValues.maxMoveSpeedSprint;
                         anim.SetFloat("runSpeed", 1f);
@@ -298,7 +298,7 @@ public class PlayerMovement : MonoBehaviour {
                         maxMoveSpeedActive = isisValues.maxMoveSpeedNormal;
                         anim.SetFloat("runSpeed", 1f);
                     }
-                    if (Input.GetKey(KeyCode.LeftShift) && isGrounded)
+                    if (Input.GetKey(KeyCode.X) && isGrounded)
                     {
                         accelerationSpeedActive = isisValues.accelerationSpeedSprint;
                         if (Mathf.Abs(rb.velocity.x) > isisValues.maxMoveSpeedNormal)
@@ -323,18 +323,18 @@ public class PlayerMovement : MonoBehaviour {
                     }
 
                     //Running
-                    if (!(Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.A)))
+                    if (!(Input.GetKey(KeyCode.RightArrow) && Input.GetKey(KeyCode.LeftArrow)))
                     {
                         anim.SetBool("isRunning", false);
                     }
                     //Move left                      
-                    if (Input.GetKey(KeyCode.A))
+                    if (Input.GetKey(KeyCode.LeftArrow))
                     {
                         rb.AddForce(-accelerationSpeedActive, 0, 0);
                         anim.SetBool("isRunning", true);
                     }
                     //Move right
-                    if (Input.GetKey(KeyCode.D))
+                    if (Input.GetKey(KeyCode.RightArrow))
                     {
                         rb.AddForce(accelerationSpeedActive, 0, 0);
                         anim.SetBool("isRunning", true);
@@ -344,7 +344,7 @@ public class PlayerMovement : MonoBehaviour {
                     //Friction / stopping
                     if (isGrounded)
                     {
-                        if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+                        if (!Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.RightArrow))
                         {
                             if (rb.velocity.x < isisValues.minMoveSpeed)
                             {
@@ -361,13 +361,13 @@ public class PlayerMovement : MonoBehaviour {
                         }
                     }
                     //Jump
-                    if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+                    if (Input.GetKeyDown(KeyCode.UpArrow) && isGrounded)
                     {
                         jumpHoldTime = 0;
                         ableToJump = true;
                         //Debug.Log("Jump check" + Time.timeSinceLevelLoad);
                     }
-                    if (Input.GetKey(KeyCode.Space) && ableToJump)
+                    if (Input.GetKey(KeyCode.UpArrow) && ableToJump)
                     {
                         //Debug.Log("Jump hold" + Time.timeSinceLevelLoad);
 
@@ -383,7 +383,7 @@ public class PlayerMovement : MonoBehaviour {
                             ableToJump = false;
                         }
                     }
-                    if (Input.GetKeyUp(KeyCode.Space))
+                    if (Input.GetKeyUp(KeyCode.UpArrow))
                     {
                         ableToJump = false;
                         jumpHoldTime = 0;
@@ -395,7 +395,7 @@ public class PlayerMovement : MonoBehaviour {
                     {
                         if (isTouchingLeftWall && !isGrounded)
                         {
-                            if (Input.GetKeyDown(KeyCode.Space))
+                            if (Input.GetKeyDown(KeyCode.UpArrow))
                             {
                                 rb.velocity = new Vector3(0, 0, 0);
                                 rb.AddForce(isisValues.wallJumpForceHoriz, isisValues.wallJumpForceVerti, 0);
@@ -403,7 +403,7 @@ public class PlayerMovement : MonoBehaviour {
                         }
                         if (isTouchingRightWall && !isGrounded)
                         {
-                            if (Input.GetKeyDown(KeyCode.Space))
+                            if (Input.GetKeyDown(KeyCode.UpArrow))
                             {
                                 rb.velocity = new Vector3(0, 0, 0);
                                 rb.AddForce(-1 * isisValues.wallJumpForceHoriz, isisValues.wallJumpForceVerti, 0);
@@ -419,27 +419,27 @@ public class PlayerMovement : MonoBehaviour {
                     #region
 
                     //Move left
-                    if (Input.GetKey(KeyCode.A))
+                    if (Input.GetKey(KeyCode.LeftArrow))
                     {
                         rb.AddForce(-hawkValues.moveSpeedHor, 0f, 0f);
                     }
                     //Move right
-                    if (Input.GetKey(KeyCode.D))
+                    if (Input.GetKey(KeyCode.RightArrow))
                     {
                         rb.AddForce(hawkValues.moveSpeedHor, 0f, 0f);
                     }
                     //Move up
-                    if (Input.GetKey(KeyCode.W))
+                    if (Input.GetKey(KeyCode.UpArrow))
                     {
                         rb.AddForce(0f, hawkValues.moveSpeedVer, 0f);
                     }
                     //Move down
-                    if (Input.GetKey(KeyCode.S))
+                    if (Input.GetKey(KeyCode.DownArrow))
                     {
                         rb.AddForce(0f, -hawkValues.moveSpeedVer, 0f);
                     }
                     //Stopping horizontal
-                    if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+                    if (!Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.RightArrow))
                     {
                         if (rb.velocity.x < hawkValues.minMoveSpeedHor)
                         {
@@ -455,7 +455,7 @@ public class PlayerMovement : MonoBehaviour {
                         }
                     }
                     //Stopping vertical
-                    if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S))
+                    if (!Input.GetKey(KeyCode.UpArrow) && !Input.GetKey(KeyCode.DownArrow))
                     {
                         if (rb.velocity.y < hawkValues.minMoveSpeedVer)
                         {
@@ -503,19 +503,19 @@ public class PlayerMovement : MonoBehaviour {
                     }
 
                     //Move left
-                    if (Input.GetKey(KeyCode.A))
+                    if (Input.GetKey(KeyCode.LeftArrow))
                     {
                         rb.AddForce(-catAccelerationSpeedActive, 0, 0);
                     }
                     //Move right
-                    if (Input.GetKey(KeyCode.D))
+                    if (Input.GetKey(KeyCode.RightArrow))
                     {
                         rb.AddForce(catAccelerationSpeedActive, 0, 0);
                     }
                     //Friction / stopping
                     if (isGrounded)
                     {
-                        if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+                        if (!Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.RightArrow))
                         {
                             if (rb.velocity.x < catValues.minMoveSpeed)
                             {
@@ -532,13 +532,13 @@ public class PlayerMovement : MonoBehaviour {
                         }
                     }
                     //Jump
-                    if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+                    if (Input.GetKeyDown(KeyCode.UpArrow) && isGrounded)
                     {
                         catJumpHoldTime = 0;
                         ableToJump = true;
                         //Debug.Log("Jump check" + Time.timeSinceLevelLoad);
                     }
-                    if (Input.GetKey(KeyCode.Space) && ableToJump)
+                    if (Input.GetKey(KeyCode.UpArrow) && ableToJump)
                     {
                         //Debug.Log("Jump hold" + Time.timeSinceLevelLoad);
 
@@ -554,7 +554,7 @@ public class PlayerMovement : MonoBehaviour {
                             ableToJump = false;
                         }
                     }
-                    if (Input.GetKeyUp(KeyCode.Space))
+                    if (Input.GetKeyUp(KeyCode.UpArrow))
                     {
                         ableToJump = false;
                         catJumpHoldTime = 0;
@@ -594,19 +594,19 @@ public class PlayerMovement : MonoBehaviour {
                     }
 
                     //Move left
-                    if (Input.GetKey(KeyCode.A))
+                    if (Input.GetKey(KeyCode.LeftArrow))
                     {
                         rb.AddForce(-ghostAccelerationSpeedActive, 0, 0);
                     }
                     //Move right
-                    if (Input.GetKey(KeyCode.D))
+                    if (Input.GetKey(KeyCode.RightArrow))
                     {
                         rb.AddForce(ghostAccelerationSpeedActive, 0, 0);
                     }
                     //Friction / stopping
                     if (isGrounded)
                     {
-                        if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+                        if (!Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.RightArrow))
                         {
                             if (rb.velocity.x < isisValues.minMoveSpeed)
                             {
