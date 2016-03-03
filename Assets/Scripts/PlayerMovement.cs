@@ -128,9 +128,6 @@ public class PlayerMovement : MonoBehaviour {
     private float latestXpos;
     private float latestYpos;
 
-    public GameObject formGauge;
-    private SpriteRenderer formGaugeSR;
-
     public GameObject bottomLeftCorner;
     public GameObject bottomRightCorner;
     public GameObject catBottomLeftCorner;
@@ -158,7 +155,6 @@ public class PlayerMovement : MonoBehaviour {
 
         playerForm = PlayerForm.Isis;
         formGaugeCurrentValue = formGaugeMaxValue;
-        formGaugeSR = formGauge.GetComponent<SpriteRenderer>();
 
         anim.runtimeAnimatorController = (RuntimeAnimatorController)isisAnimController;
         if (!File.Exists("EquippedSave.txt"))
@@ -314,8 +310,6 @@ public class PlayerMovement : MonoBehaviour {
             {
                 isAlive = false;
             }
-
-            formGaugeSR.color = new Color(0.0f, 0.0f, formGaugeCurrentValue * 0.01f);
 
             //Transformations
             if (playerForm == PlayerForm.Isis && formGaugeCurrentValue > 0 && Input.GetKey(KeyCode.UpArrow) && Input.GetKeyDown(KeyCode.Z))
