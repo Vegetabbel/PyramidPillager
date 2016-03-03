@@ -4,10 +4,12 @@ using System.Collections;
 public class EquipTreasure : MonoBehaviour {
 
 	public GameObject Contrl;
+	string name;
+	int num;
 
 	// Use this for initialization
 	void Start () {
-	
+		num = int.Parse (this.name);
 	}
 	
 	// Update is called once per frame
@@ -16,6 +18,6 @@ public class EquipTreasure : MonoBehaviour {
 	}
 
 	void OnMouseDown () {
-		Contrl.SendMessage (int.Parse(this.name.ToString()));
+		Contrl.SendMessage ("EquipThis", num);
 	}
 }
