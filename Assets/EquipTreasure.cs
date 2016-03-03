@@ -9,7 +9,7 @@ public class EquipTreasure : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		num = int.Parse (this.name);
+		num = int.Parse(this.gameObject.name.ToString());
 	}
 	
 	// Update is called once per frame

@@ -7,15 +7,29 @@ using Random = UnityEngine.Random;
 public class TreasureEquipScript : MonoBehaviour {
 
 	private GameObject[] treasures = new GameObject[5];
+	private GameObject[] highlight = new GameObject[5];
 
 	private const string fileName = "TreasureSave.txt";
+	private const string equippedFileName = "EquippedSave.txt";
 	private GameObject gameMaster;
 	string[] treasureArray = new string[5];
+	string equipped = "5";
+
+	GameObject temp;
+	int tempInt;
 
 	// Use this for initialization
 	void Start () {
-		GameObject.FindGameObjectsWithTag ("treasure");
-
+		treasures = GameObject.FindGameObjectsWithTag ("treasure");
+	
+		tempInt = 0;
+		for (int i = 0; i < treasures.Length; i++) {
+			tempInt = treasures [i].gameObject.transform.GetSiblingIndex ();
+			temp = treasures [tempInt];
+			treasures [tempInt] = treasures [i];
+			treasures [i] = temp;
+		}
+			
 		if (File.Exists(fileName)) {
 			treasureArray = File.ReadAllLines (fileName);
 			File.Delete(fileName);
@@ -29,11 +43,28 @@ public class TreasureEquipScript : MonoBehaviour {
 		}
 		File.WriteAllLines(fileName, treasureArray);
 
+		if (File.Exists(fileName)) {
+			equipped = File.ReadAllText (equippedFileName);
+			File.Delete(equippedFileName);
+			File.WriteAllText (equippedFileName, equipped);
+		}
 
+		for (int i = 0; i < treasures.Length; i++) {
+			highlight[i] = treasures[i].gameObject.transform.GetChild (2).gameObject;
+			highlight [i].SetActive (false);
+		}
+
+		for (int i = 0; i < treasureArray.Length; i++) {
+			if (treasureArray[i] == "1") {
+				temp = treasures [i].gameObject.transform.GetChild (1).gameObject;
+				temp.SetActive (false);
+			}
+		}
 	}
 
 	// Update is called once per frame
 	void Update () {
+		/*
 		if (Input.GetKey (KeyCode.K)) {
 			treasureArray [0] = "0";
 			treasureArray [1] = "0";
@@ -42,11 +73,33 @@ public class TreasureEquipScript : MonoBehaviour {
 			treasureArray [4] = "0";
 			File.WriteAllLines(fileName, treasureArray);
 		}
+		if (Input.GetKey (KeyCode.L)) {
+			treasureArray [0] = "1";
+			treasureArray [1] = "1";
+			treasureArray [2] = "0";
+			treasureArray [3] = "1";
+			treasureArray [4] = "0";
+			File.WriteAllLines(fileName, treasureArray);
+		}*/
 	}
 
 	void EquipThis (int num) {
-		if (treasureArray[num] == "1") {
-			
+		if (num == 5) {
+			//UNEQUIP
+			for (int i = 0; i < highlight.Length; i++) {
+				highlight [i].SetActive (false);
+			}
+			equipped = num.ToString ();
+			File.Delete(equippedFileName);
+			File.WriteAllText (equippedFileName, equipped);
+		} else if (treasureArray[num] == "1") {
+			for (int i = 0; i < highlight.Length; i++) {
+				highlight [i].SetActive (false);
+			}
+			highlight [num].SetActive (true);
+			equipped = num.ToString ();
+			File.Delete(equippedFileName);
+			File.WriteAllText (equippedFileName, equipped);
 		} else {
 			
 		}
