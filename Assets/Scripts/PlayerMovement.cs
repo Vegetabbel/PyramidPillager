@@ -78,6 +78,7 @@ public class PlayerMovement : MonoBehaviour {
 
     private float IsisMaxMoveSpeedNormalNoEquip;
     private float IsisMaxMoveSpeedSprintNoEquip;
+    private float IsisJumpForceNormal;
 
     public Object isisAnimController;
     public Object hawkAnimController;
@@ -90,7 +91,9 @@ public class PlayerMovement : MonoBehaviour {
     public float formGaugeFillValue = 10;
     public float formGaugeMaxValue = 100;
 
-    private int lives = 3;
+    private int lives;
+    private int normalLiveAmount = 3;
+    private int equipLiveAmount = 4;
 
     //Isis values
     public IsisValues isisValues = new IsisValues();
@@ -145,7 +148,10 @@ public class PlayerMovement : MonoBehaviour {
         maxMoveSpeedActive = isisValues.maxMoveSpeedNormal;
         IsisMaxMoveSpeedNormalNoEquip = isisValues.maxMoveSpeedNormal;
         IsisMaxMoveSpeedSprintNoEquip = isisValues.maxMoveSpeedSprint;
+        lives = normalLiveAmount;
         formGaugeDecreaseValueActive = formGaugeDecreaseValue;
+        IsisJumpForceNormal = isisValues.jumpForce;
+
         playerForm = PlayerForm.Isis;
         formGaugeCurrentValue = formGaugeMaxValue;
         formGaugeSR = formGauge.GetComponent<SpriteRenderer>();
@@ -159,27 +165,25 @@ public class PlayerMovement : MonoBehaviour {
         {
             equipIndex = int.Parse(File.ReadAllText("EquippedSave.txt"));
         }
-    }
-
-    void Update()
-    {
-        // 5: No equip
-        // 0: Extra life
-        // 1: Jump force +5
-        // 2: Max move speed ...normal + 3 ...sprint + 6
-        // 3: Form gauge decrease -10
-        // 4: Hold ctrl to slow time down 0.5sec
 
         //Check equip index 0 - Extra life
         if (equipIndex == 0)
         {
-
+            lives = normalLiveAmount;
+        }
+        else
+        {
+            lives = equipLiveAmount;
         }
 
         //Check equip index 1 - Jump force +5
         if (equipIndex == 1)
         {
-
+            isisValues.jumpForce += 5;
+        }
+        else
+        {
+            isisValues.jumpForce = IsisJumpForceNormal;
         }
 
         //Check equip index 2 - Max move speed ...normal + 3 ...sprint + 6
@@ -195,7 +199,7 @@ public class PlayerMovement : MonoBehaviour {
         }
 
         //Check equip index 3 - Form gauge decrease -10
-        if (equipIndex == 3 && formGaugeDecreaseValueActive != formGaugeDecreaseValue -10)
+        if (equipIndex == 3 && formGaugeDecreaseValueActive != formGaugeDecreaseValue - 10)
         {
             formGaugeDecreaseValueActive -= 10;
         }
@@ -203,16 +207,10 @@ public class PlayerMovement : MonoBehaviour {
         {
             formGaugeDecreaseValueActive = formGaugeDecreaseValue;
         }
-        //Check equip index 4 - Hold ctrl to slow time down 50%
-        if (equipIndex == 4 && Input.GetKey(KeyCode.LeftControl))
-        {
-            Time.timeScale = 0.5f;
-        }
-        else
-        {
-            Time.timeScale = 1;
-        }
+    }
 
+    void Update()
+    {
         //Animator booleans
         //Flip x if moving
         anim.SetBool("isGrounded", isGrounded);
@@ -263,22 +261,35 @@ public class PlayerMovement : MonoBehaviour {
         {
 			if (GameObject.Find("GameController"))
             {				
-                if (lives < 1)
+                if (lives < 2)
                 {
-                    // Game over screen
+                    GameObject.Find("Cameras").transform.Find("GameOver").gameObject.SetActive(true);
+                    rb.velocity = new Vector3(0, rb.velocity.y, 0);
+                    Invoke("LoadMenu", 3f);
                 }
                 else
                 {
                     GameObject.Find("GameController").SendMessage("Die");
+                    formGaugeCurrentValue = formGaugeMaxValue;
                     lives -= 1;
                     isAlive = true;
+                    playerForm = PlayerForm.Isis;
+                    bc.size = new Vector3(1f, 1.8f, 1f);
+                    rb.useGravity = true;
+                    anim.runtimeAnimatorController = (RuntimeAnimatorController)isisAnimController;
+
                 }
             }
             else if (GameObject.Find("SpawnPoint1"))
             {
 				this.transform.position = TutorialSpawnPoint.transform.position;
+                formGaugeCurrentValue = formGaugeMaxValue;
                 isAlive = true;
-			}
+                playerForm = PlayerForm.Isis;
+                bc.size = new Vector3(1f, 1.8f, 1f);
+                rb.useGravity = true;
+                anim.runtimeAnimatorController = (RuntimeAnimatorController)isisAnimController;
+            }
         }
         else
         { 
@@ -353,6 +364,16 @@ public class PlayerMovement : MonoBehaviour {
                 {
                     anim.runtimeAnimatorController = (RuntimeAnimatorController)isisAnimController;
                 }
+            }
+
+            //Check equip index 4 - Hold ctrl to slow time down 50%
+            if (equipIndex == 4 && Input.GetKey(KeyCode.LeftControl))
+            {
+                Time.timeScale = 0.5f;
+            }
+            else
+            {
+                Time.timeScale = 1;
             }
 
             //Change controls based on active form
@@ -461,11 +482,9 @@ public class PlayerMovement : MonoBehaviour {
                     {
                         jumpHoldTime = 0;
                         ableToJump = true;
-                        //Debug.Log("Jump check" + Time.timeSinceLevelLoad);
                     }
                     if (Input.GetKey(KeyCode.UpArrow) && ableToJump)
                     {
-                        //Debug.Log("Jump hold" + Time.timeSinceLevelLoad);
 
                         jumpHoldTime += 10 * Time.deltaTime;
 
@@ -483,7 +502,6 @@ public class PlayerMovement : MonoBehaviour {
                     {
                         ableToJump = false;
                         jumpHoldTime = 0;
-                        //Debug.Log("Jump release" + Time.timeSinceLevelLoad);
                     }
 
                     //Wall jump
@@ -728,11 +746,16 @@ public class PlayerMovement : MonoBehaviour {
                     break;
             }
         }
-
+    
     }
 	void TutorialCollider (GameObject spawn) {
 		TutorialSpawnPoint = spawn;
 	}
+
+    private void LoadMenu()
+    {
+        Application.LoadLevel("MenuScene");
+    }
 
     public bool IsTouchingLeftWall
     {
