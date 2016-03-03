@@ -69,7 +69,7 @@ public class PlayerMovement : MonoBehaviour {
     public enum PlayerForm { Isis, Hawk, Cat, Ghost };
     public PlayerForm playerForm;
 
-    private int equipIndex = 4; // 5: no equip
+    private int equipIndex = 5; // 5: no equip
                                 // 0: extra life
                                 // 1: jump force +5
                                 // 2: Max move speed ...normal + 3 ...sprint + 6
@@ -296,7 +296,7 @@ public class PlayerMovement : MonoBehaviour {
             //Form gauge
             if (formGaugeCurrentValue > 0 && playerForm != PlayerForm.Isis)
             {
-                formGaugeCurrentValue -= formGaugeDecreaseValue * Time.deltaTime;
+                formGaugeCurrentValue -= formGaugeDecreaseValueActive * Time.deltaTime;
             }
             else if (formGaugeCurrentValue < formGaugeMaxValue)
             {
