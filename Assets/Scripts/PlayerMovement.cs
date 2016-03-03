@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.IO;
 
 [System.Serializable]
 public class IsisValues
@@ -68,6 +69,16 @@ public class PlayerMovement : MonoBehaviour {
     public enum PlayerForm { Isis, Hawk, Cat, Ghost };
     public PlayerForm playerForm;
 
+    private int equipIndex = 4; // 5: no equip
+                                // 0: extra life
+                                // 1: jump force +5
+                                // 2: Max move speed ...normal + 3 ...sprint + 6
+                                // 3: Form gauge decrease -10
+                                // 4: Hold ctrl to slow time down 0.5sec
+
+    private float IsisMaxMoveSpeedNormalNoEquip;
+    private float IsisMaxMoveSpeedSprintNoEquip;
+
     public Object isisAnimController;
     public Object hawkAnimController;
     public Object catAnimController;
@@ -75,14 +86,17 @@ public class PlayerMovement : MonoBehaviour {
 
     private float formGaugeCurrentValue;
     public float formGaugeDecreaseValue = 20;
+    private float formGaugeDecreaseValueActive;
     public float formGaugeFillValue = 10;
     public float formGaugeMaxValue = 100;
+
+    private int lives = 3;
 
     //Isis values
     public IsisValues isisValues = new IsisValues();
 
     private float accelerationSpeedActive;              //Active move speed, set in Update()
-    private float maxMoveSpeedActive;                   //'Active max move speed, set in Update() and Start()
+    private float maxMoveSpeedActive;                   //Active max move speed, set in Update() and Start()
     private float jumpHoldTime;                      
    
     private bool isGrounded = false;
@@ -129,15 +143,76 @@ public class PlayerMovement : MonoBehaviour {
         anim = transform.Find("SpriteRenderer").GetComponent<Animator>();
 
         maxMoveSpeedActive = isisValues.maxMoveSpeedNormal;
+        IsisMaxMoveSpeedNormalNoEquip = isisValues.maxMoveSpeedNormal;
+        IsisMaxMoveSpeedSprintNoEquip = isisValues.maxMoveSpeedSprint;
+        formGaugeDecreaseValueActive = formGaugeDecreaseValue;
         playerForm = PlayerForm.Isis;
         formGaugeCurrentValue = formGaugeMaxValue;
         formGaugeSR = formGauge.GetComponent<SpriteRenderer>();
 
         anim.runtimeAnimatorController = (RuntimeAnimatorController)isisAnimController;
+        if (!File.Exists("EquippedSave.txt"))
+        {
+            equipIndex = 5;
+        }
+        else
+        {
+            equipIndex = int.Parse(File.ReadAllText("EquippedSave.txt"));
+        }
     }
 
     void Update()
     {
+        // 5: No equip
+        // 0: Extra life
+        // 1: Jump force +5
+        // 2: Max move speed ...normal + 3 ...sprint + 6
+        // 3: Form gauge decrease -10
+        // 4: Hold ctrl to slow time down 0.5sec
+
+        //Check equip index 0 - Extra life
+        if (equipIndex == 0)
+        {
+
+        }
+
+        //Check equip index 1 - Jump force +5
+        if (equipIndex == 1)
+        {
+
+        }
+
+        //Check equip index 2 - Max move speed ...normal + 3 ...sprint + 6
+        if (equipIndex == 2)
+        {
+            isisValues.maxMoveSpeedNormal += 3;
+            isisValues.maxMoveSpeedSprint += 6;
+        }
+        else
+        {
+            isisValues.maxMoveSpeedNormal = IsisMaxMoveSpeedNormalNoEquip;
+            isisValues.maxMoveSpeedSprint = IsisMaxMoveSpeedSprintNoEquip;
+        }
+
+        //Check equip index 3 - Form gauge decrease -10
+        if (equipIndex == 3 && formGaugeDecreaseValueActive != formGaugeDecreaseValue -10)
+        {
+            formGaugeDecreaseValueActive -= 10;
+        }
+        else
+        {
+            formGaugeDecreaseValueActive = formGaugeDecreaseValue;
+        }
+        //Check equip index 4 - Hold ctrl to slow time down 50%
+        if (equipIndex == 4 && Input.GetKey(KeyCode.LeftControl))
+        {
+            Time.timeScale = 0.5f;
+        }
+        else
+        {
+            Time.timeScale = 1;
+        }
+
         //Animator booleans
         //Flip x if moving
         anim.SetBool("isGrounded", isGrounded);
@@ -182,18 +257,28 @@ public class PlayerMovement : MonoBehaviour {
             anim.SetBool("isFalling", false);
         }
         latestYpos = transform.position.y;
+
         //Death
         if (!isAlive)
         {
-            //sr.color = new Color(255, 0, 170);
-            //rb.velocity.Set(0, 0, 0);
-            //rb.isKinematic = true;
-			if (GameObject.Find("GameController")) {
-				GameObject.Find("GameController").SendMessage("Die");
-			}else if (GameObject.Find("SpawnPoint1")) {
+			if (GameObject.Find("GameController"))
+            {				
+                if (lives < 1)
+                {
+                    // Game over screen
+                }
+                else
+                {
+                    GameObject.Find("GameController").SendMessage("Die");
+                    lives -= 1;
+                    isAlive = true;
+                }
+            }
+            else if (GameObject.Find("SpawnPoint1"))
+            {
 				this.transform.position = TutorialSpawnPoint.transform.position;
+                isAlive = true;
 			}
-			isAlive = true;
         }
         else
         { 
