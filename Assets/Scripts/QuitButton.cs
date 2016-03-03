@@ -21,8 +21,8 @@ public class QuitButton : MonoBehaviour {
 			LoadedLevel = Application.loadedLevel;
 		}
 		else if (LoadedLevel == 1) {
-			Application.LoadLevel(0);
-			LoadedLevel = Application.loadedLevel;
+            Application.Quit();
+            LoadedLevel = Application.loadedLevel;
 		}
 		else if (LoadedLevel == 2) {
 			Application.LoadLevel(1);
@@ -33,7 +33,7 @@ public class QuitButton : MonoBehaviour {
 			LoadedLevel = Application.loadedLevel;
 		}
 		else if (LoadedLevel == 4) {
-			Application.LoadLevel(0);
+			Application.LoadLevel(1);
 			LoadedLevel = Application.loadedLevel;
 		}
 	}

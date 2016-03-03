@@ -1066,7 +1066,7 @@ TextMesh:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1024894021}
-  m_Text: Equip Scene
+  m_Text: EQUIPPABLES
   m_OffsetZ: 0
   m_CharacterSize: 0.11
   m_LineSpacing: 1
@@ -1322,7 +1322,6 @@ GameObject:
   - 33: {fileID: 1130311398}
   - 65: {fileID: 1130311397}
   - 23: {fileID: 1130311396}
-  - 114: {fileID: 1130311395}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -1330,17 +1329,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1130311395
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1130311394}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed687529e47a221429561b5c644a56a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!23 &1130311396
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1394,7 +1382,7 @@ Transform:
   m_GameObject: {fileID: 1130311394}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0.5300001, z: -0.4}
-  m_LocalScale: {x: 8, y: 1, z: 0.1}
+  m_LocalScale: {x: 8.5, y: 1, z: 0.1}
   m_Children: []
   m_Father: {fileID: 1775952600}
   m_RootOrder: 0

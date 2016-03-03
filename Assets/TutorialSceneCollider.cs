@@ -17,7 +17,7 @@ public class TutorialSceneCollider : MonoBehaviour {
 
 	void OnTriggerEnter (Collider other) {
 		if (other.gameObject.tag == "Player") {
-			Application.LoadLevel("TitleScene");
+			Application.LoadLevel("MenuScene");
 		}
 	}
 }
