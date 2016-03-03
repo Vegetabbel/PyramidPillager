@@ -138,6 +138,8 @@ public class PlayerMovement : MonoBehaviour {
 
 	GameObject TutorialSpawnPoint;
 
+    public Texture heart;
+
     void Start ()
     {
         rb = GetComponent<Rigidbody>();
@@ -152,6 +154,8 @@ public class PlayerMovement : MonoBehaviour {
         formGaugeDecreaseValueActive = formGaugeDecreaseValue;
         IsisJumpForceNormal = isisValues.jumpForce;
 
+        heart = (Texture)Resources.Load("Heart");
+
         playerForm = PlayerForm.Isis;
         formGaugeCurrentValue = formGaugeMaxValue;
         formGaugeSR = formGauge.GetComponent<SpriteRenderer>();
@@ -165,15 +169,15 @@ public class PlayerMovement : MonoBehaviour {
         {
             equipIndex = int.Parse(File.ReadAllText("EquippedSave.txt"));
         }
-
+        print(equipIndex);
         //Check equip index 0 - Extra life
         if (equipIndex == 0)
         {
-            lives = normalLiveAmount;
+            lives = equipLiveAmount;
         }
         else
         {
-            lives = equipLiveAmount;
+            lives = normalLiveAmount;
         }
 
         //Check equip index 1 - Jump force +5
@@ -261,7 +265,7 @@ public class PlayerMovement : MonoBehaviour {
         {
 			if (GameObject.Find("GameController"))
             {				
-                if (lives < 2)
+                if (lives < 1)
                 {
                     GameObject.Find("Cameras").transform.Find("GameOver").gameObject.SetActive(true);
                     rb.velocity = new Vector3(0, rb.velocity.y, 0);
@@ -748,6 +752,16 @@ public class PlayerMovement : MonoBehaviour {
         }
     
     }
+
+    void OnGUI()
+    {
+        for (int i = 0; i < lives; i++)
+        {
+            GUI.Label(new Rect(new Vector2(30 + i*70, 20), new Vector2(60,60)), heart);
+        }
+        GUI.HorizontalSlider(new Rect(new Vector2(28, 90), new Vector2(200, 200)), formGaugeCurrentValue, 0f, 100f);
+    }
+
 	void TutorialCollider (GameObject spawn) {
 		TutorialSpawnPoint = spawn;
 	}

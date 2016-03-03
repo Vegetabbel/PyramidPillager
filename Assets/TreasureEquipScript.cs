@@ -84,6 +84,7 @@ public class TreasureEquipScript : MonoBehaviour {
 	}
 
 	void EquipThis (int num) {
+        print(num);
 		if (num == 5) {
 			//UNEQUIP
 			for (int i = 0; i < highlight.Length; i++) {
