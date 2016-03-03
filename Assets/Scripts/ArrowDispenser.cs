@@ -17,6 +17,7 @@ public class ArrowDispenser : MonoBehaviour {
     {
         objectPool = GameObject.FindGameObjectWithTag("GameController").GetComponent<objectPool>();
         direction = Vector3.Normalize(destination.transform.position - transform.position);
+        arrow = null;
     }
 
     void Update ()
@@ -32,7 +33,7 @@ public class ArrowDispenser : MonoBehaviour {
     {
         for (int i = 0; i < objectPool.arrowPool.Count; i++)
         {
-            if (!objectPool.arrowPool[i].activeInHierarchy)
+            if (objectPool.arrowPool[i] != null && !objectPool.arrowPool[i].activeInHierarchy)
             {
                 objectPool.arrowPool[i].SetActive(true);
                 objectPool.arrowPool[i].transform.position = transform.position;
