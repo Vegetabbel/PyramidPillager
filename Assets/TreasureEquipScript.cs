@@ -80,6 +80,14 @@ public class TreasureEquipScript : MonoBehaviour {
 			treasureArray [3] = "1";
 			treasureArray [4] = "0";
 			File.WriteAllLines(fileName, treasureArray);
+		}
+		if (Input.GetKey (KeyCode.O)) {
+			treasureArray [0] = "1";
+			treasureArray [1] = "1";
+			treasureArray [2] = "1";
+			treasureArray [3] = "1";
+			treasureArray [4] = "1";
+			File.WriteAllLines(fileName, treasureArray);
 		}*/
 	}
 

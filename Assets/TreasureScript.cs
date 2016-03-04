@@ -54,6 +54,8 @@ public class TreasureScript : MonoBehaviour {
 			}
 			Debug.Log (aa);
 
+			Destroy (this.gameObject);
+
 			/*
 			StreamWriter sr;
 			if (File.Exists(fileName))

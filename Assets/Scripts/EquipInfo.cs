@@ -26,22 +26,22 @@ public class EquipInfo : MonoBehaviour {
         switch (equipIndex)
         {
             case 0:
-                text.text = "Equipped: rinkula \n\nEffect: Grants one extra life \n\nDescription: asd \nasd \nasd \nasd \nasd \nasd \nasd";
+                text.text = "Equipped: rinkula \n\nEffect: Extra life \n\nDescription: \nGrants an extra life \nasd \nasd \nasd \nasd \nasd";
                 break;
             case 1:
-                text.text = "Equipped: sauveli \n\nEffect: Isis can jump higher \n\nDescription: asd \nasd \nasd \nasd \nasd \nasd \nasd";
+                text.text = "Equipped: sauveli \n\nEffect: Jump higher \n\nDescription: \nISIS jumps higher \nasd \nasd \nasd \nasd \nasd";
                 break;
             case 2:
-                text.text = "Equipped: räpsytin \n\nEffect: Isis can run and sprint faster \n\nDescription: asd \nasd \nasd \nasd \nasd \nasd \nasd";
+                text.text = "Equipped: räpsytin \n\nEffect: Sprint faster \n\nDescription: \nISIS sprints faster \nasd \nasd \nasd \nasd \nasd";
                 break;
             case 3:
-                text.text = "Equipped: käärylä \n\nEffect: Form gauge depletes slower \n\nDescription: asd \nasd \nasd \nasd \nasd \nasd \nasd";
+			text.text = "Equipped: käärylä \n\nEffect: Longer form \n\nDescription: \nYour form gauge \ndepletes slower \nasd \nasd \nasd \nasd";
                 break;
             case 4:
-                text.text = "Equipped: öttiäinen \n\nEffect: Hold down Left CTRL to slow down time \n\nDescription: asd \nasd \nasd \nasd \nasd \nasd \nasd";
+			text.text = "Equipped: öttiäinen \n\nEffect: Slow down time \n\nDescription: \nHold down Left CTRL \nto slow down time \nasd \nasd \nasd \nasd";
                 break;
             case 5:
-                text.text = "Equipped: none";
+                text.text = "Equipped: none \n\nEffect: \nYou've got nothing!";
                 break;
             default:
                 text.text = "Equipped: none";
