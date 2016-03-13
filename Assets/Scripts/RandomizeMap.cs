@@ -113,7 +113,7 @@ public class RandomizeMap : MonoBehaviour
 			respawnPoint = endLevel.transform.Find("SpawnPoint").position;
 			levels[9].SetActive(false);
 			block.transform.Rotate (new Vector3 (180, 180, 270));
-			Application.LoadLevel("TitleScene");
+			Application.LoadLevel("MenuScene");
 		}
 		else {
 			roomNum = int.Parse(roomName.Substring (3, 1 + (roomName.Length - 4)));
